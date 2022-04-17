@@ -11,17 +11,17 @@ import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
 
 interface P extends A {
-  on?: (n: number) => unknown;
+  on?: (left: number) => unknown;
   size: [number, number];
 }
 
-// 🔴
 let _1 = 0;
 
 function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.IntrinsicElements['div'] & P) {
   /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
 
   const $isMouseDown = React.useRef(isMouseDown);
+
   const $updateIsMouseDown = (isMouseDown: boolean) => {
     $isMouseDown.current = isMouseDown;
     updateIsMouseDown(isMouseDown);
@@ -33,12 +33,12 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
   /* (4) */ const translate = () => new Translate(childElement.current!);
 
   // (1)
-  function onMouseDown(event: React.MouseEvent<HTMLElement>) {
+  function onMouseDown(event: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>) {
     const [currentTranslateX] = translate().read();
 
     $updateIsMouseDown(true);
 
-    const [elementMouseX] = readMouse(event as unknown as MouseEvent);
+    const [elementMouseX] = readMouse(event);
     const [elementOffsetX] = readElementOffset(parentElement.current!);
 
     //   | väčšie číslo
@@ -46,7 +46,7 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
   }
 
   // (2)
-  function onMouseMove(event: MouseEvent) {
+  function onMouseMove(event: MouseEvent | TouchEvent) {
     if ($isMouseDown.current) {
       const [elementMouseX] = readMouse(event);
       const [elementOffsetX] = readElementOffset(parentElement.current!);
@@ -58,12 +58,13 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
       x = x > 0 ? x : 0;
 
       // <
-      const widthDifference = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!);
-      x = x < widthDifference ? x : widthDifference;
+      const width = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!);
+      x = x < width ? x : width;
 
       translate().write(x, 0);
 
-      const _2: number = (x / widthDifference) * 100;
+      // (3)
+      const _2: number = (x / width) * 100;
 
       const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]);
 
@@ -80,17 +81,28 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
     on?.(size[0]);
 
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchmove', onMouseMove);
+
     window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('touchend', onMouseUp);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onMouseMove);
+
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchend', onMouseUp);
     };
   }, []);
 
   return (
     <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>
-      <div className="horizontal-number-slider__left" onMouseDown={onMouseDown} ref={childElement} />
+      <div
+        className="horizontal-number-slider__left"
+        onMouseDown={onMouseDown}
+        onTouchStart={onMouseDown}
+        ref={childElement}
+      />
     </div>
   );
 }
