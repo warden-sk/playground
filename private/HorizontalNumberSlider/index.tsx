@@ -10,7 +10,7 @@ import readElementOffset from './readElementOffset';
 import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
 
-interface P {
+interface P extends A {
   on?: (n: number) => unknown;
   size: [number, number];
   step?: number;
@@ -19,7 +19,7 @@ interface P {
 // 🔴
 let _1 = 0;
 
-function HorizontalNumberSlider({ on, size }: P) {
+function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.IntrinsicElements['div'] & P) {
   /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
 
   const $isMouseDown = React.useRef(isMouseDown);
@@ -90,7 +90,7 @@ function HorizontalNumberSlider({ on, size }: P) {
   }, []);
 
   return (
-    <div className="horizontal-number-slider" ref={parentElement}>
+    <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>
       <div className="horizontal-number-slider__left" onMouseDown={onMouseDown} ref={childElement} />
     </div>
   );

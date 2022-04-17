@@ -17,11 +17,11 @@
 }
 .horizontal-number-slider__left {
   background-color: #fff;
-  border: calc(var(--line-height) * 2) solid currentColor;
+  border: var(--line-height) solid currentColor;
   border-radius: 50%;
   cursor: pointer;
-  height: 2rem;
+  height: calc(var(--line-height) * 8);
   position: relative;
-  width: 2rem;
+  width: calc(var(--line-height) * 8);
   z-index: 1;
 }
