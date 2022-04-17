@@ -1,13 +1,13 @@
 .horizontal-number-slider {
-  --line-height: 0.125rem;
+  --line\(height\): 0.125rem;
 
   position: relative;
 }
 .horizontal-number-slider::after {
   background-color: currentColor;
-  border-radius: calc(var(--line-height) / 2);
+  border-radius: calc(var(--line\(height\)) / 2);
   content: '';
-  height: var(--line-height);
+  height: var(--line\(height\));
   left: 0;
   opacity: 0.5;
   position: absolute;
@@ -16,12 +16,10 @@
   transform: translateY(-50%);
 }
 .horizontal-number-slider__left {
-  background-color: #fff;
-  border: var(--line-height) solid currentColor;
+  background-color: currentColor;
   border-radius: 50%;
-  cursor: pointer;
-  height: calc(var(--line-height) * 8);
+  height: 1rem;
   position: relative;
-  width: calc(var(--line-height) * 8);
+  width: 1rem;
   z-index: 1;
 }

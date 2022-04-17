@@ -12,7 +12,7 @@ function Client() {
   return (
     <div className="container" mX="auto" pX="4">
       <div mX="auto" width="6/12">
-        <HorizontalNumberSlider mY="4" on={updatePrice} size={[25, 100]} />
+        <HorizontalNumberSlider mY="2" on={updatePrice} size={[25, 100]} />
         <div textAlign="center">{price.toFixed()} EUR</div>
       </div>
     </div>
