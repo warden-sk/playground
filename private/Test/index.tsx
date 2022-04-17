@@ -90,21 +90,9 @@ function Test({ on, size, step }: P) {
     };
   }, []);
 
-  const rows = [
-    `Size: ${size.join()}`,
-    `Step: ${step}`,
-    `Steps: ${steps(size, step).join()}`,
-    `isMouseDown: ${isMouseDown.toString()}`,
-    '\n',
-    `Child element width: ${childElement.current ? readElementWidth(childElement.current) : 0}px`,
-    `Parent element width: ${childElement.current ? readElementWidth(childElement.current.parentElement) : 0}px`,
-  ] as const;
-
-  console.log(rows.join('\n'));
-
   return (
     <div className="test" ref={parentElement}>
-      <div className="test__left" onMouseDown={onMouseDown} ref={childElement}></div>
+      <div className="test__left" onMouseDown={onMouseDown} ref={childElement} />
     </div>
   );
 }
