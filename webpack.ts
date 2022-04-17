@@ -7,8 +7,9 @@ import webpack from 'webpack';
 
 const compiler = webpack(
   common({
-    htmlTemplate: () => '<div id="client" />',
+    htmlTemplate: () => '<div id="client"></div>',
     name: 'Playground',
+    publicPath: process.env.NODE_ENV === 'production' && 'https://warden-sk.github.io/playground/public',
   })
 );
 
