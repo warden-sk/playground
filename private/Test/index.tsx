@@ -2,7 +2,7 @@
  * Copyright 2022 Marek Kobida
  */
 
-import './Test.css';
+import './index.css';
 
 import React from 'react';
 import Translate from './Translate';
