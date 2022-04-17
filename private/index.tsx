@@ -10,10 +10,12 @@ function Client() {
   const [price, updatePrice] = React.useState<number>(0);
 
   return (
-    <>
+    <div className="container" mX="auto" p="4">
       <Test on={updatePrice} size={[25, 100]} step={25} />
-      <div className="price">{price.toFixed()} EUR</div>
-    </>
+      <div mT="4" textAlign="center">
+        {price.toFixed()} EUR
+      </div>
+    </div>
   );
 }
 
