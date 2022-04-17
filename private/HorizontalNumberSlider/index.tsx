@@ -11,9 +11,9 @@ import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
 
 interface P {
-  on: (n: number) => unknown;
+  on?: (n: number) => unknown;
   size: [number, number];
-  step: number;
+  step?: number;
 }
 
 // 🔴
@@ -31,7 +31,7 @@ function HorizontalNumberSlider({ on, size }: P) {
   /* (2) */ const childElement = React.useRef<HTMLDivElement>();
   /* (3) */ const parentElement = React.useRef<HTMLDivElement>();
 
-  /* (4) */ const translate = () => new Translate(childElement.current);
+  /* (4) */ const translate = () => new Translate(childElement.current!);
 
   // (1)
   function onMouseDown(event: React.MouseEvent<HTMLElement>) {
@@ -40,7 +40,7 @@ function HorizontalNumberSlider({ on, size }: P) {
     $updateIsMouseDown(true);
 
     const [elementMouseX] = readMouse(event as unknown as MouseEvent);
-    const [elementOffsetX] = readElementOffset(parentElement.current);
+    const [elementOffsetX] = readElementOffset(parentElement.current!);
 
     //   | väčšie číslo
     _1 = elementMouseX - elementOffsetX - currentTranslateX;
@@ -50,7 +50,7 @@ function HorizontalNumberSlider({ on, size }: P) {
   function onMouseMove(event: MouseEvent) {
     if ($isMouseDown.current) {
       const [elementMouseX] = readMouse(event);
-      const [elementOffsetX] = readElementOffset(parentElement.current);
+      const [elementOffsetX] = readElementOffset(parentElement.current!);
 
       //              | väčšie číslo
       let x: number = elementMouseX - elementOffsetX - _1;
@@ -59,7 +59,7 @@ function HorizontalNumberSlider({ on, size }: P) {
       x = x > 0 ? x : 0;
 
       // <
-      const widthDifference = readElementWidth(parentElement.current) - readElementWidth(childElement.current);
+      const widthDifference = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!);
       x = x < widthDifference ? x : widthDifference;
 
       translate().write(x, 0);
@@ -68,7 +68,7 @@ function HorizontalNumberSlider({ on, size }: P) {
 
       const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]);
 
-      on(_3);
+      on?.(_3);
     }
   }
 
@@ -78,7 +78,7 @@ function HorizontalNumberSlider({ on, size }: P) {
   }
 
   React.useEffect(() => {
-    on(size[0]);
+    on?.(size[0]);
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
