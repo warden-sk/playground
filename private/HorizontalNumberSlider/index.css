@@ -1,3 +1,6 @@
+body {
+  overscroll-behavior: contain;
+}
 .test {
   min-height: 100vh;
   min-width: 100vw;
