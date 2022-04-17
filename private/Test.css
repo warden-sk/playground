@@ -1,0 +1,38 @@
+body {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+.price {
+  font-weight: 600;
+  text-align: center;
+}
+.test {
+  --line-height: 0.125rem;
+
+  position: relative;
+  width: 20rem;
+}
+.test::after {
+  background-color: currentColor;
+  border-radius: calc(var(--line-height) / 2);
+  content: '';
+  height: var(--line-height);
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.test__left {
+  background-color: #fff;
+  border: calc(var(--line-height) * 2) solid currentColor;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 2rem;
+  position: relative;
+  width: 2rem;
+  z-index: 1;
+}
