@@ -7,13 +7,16 @@ body {
 }
 .price {
   font-weight: 600;
-  padding: 1rem;
   text-align: center;
 }
 .test {
   --line-height: 0.125rem;
 
+  margin-bottom: 1rem;
+  margin-top: 1rem;
   position: relative;
+
+  /* (1) */
   width: 20rem;
 }
 .test::after {

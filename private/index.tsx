@@ -7,12 +7,12 @@ import ReactDOM from 'react-dom';
 import Test from './Test';
 
 function Client() {
-  const [[price], updatePrice] = React.useState<[x: number, y: number]>([0, 0]);
+  const [price, updatePrice] = React.useState<number>(0);
 
   return (
     <>
-      <Test on={updatePrice} />
-      <div className="price">{price} EUR</div>
+      <Test on={updatePrice} size={[25, 100]} step={25} />
+      <div className="price">{price.toFixed()} EUR</div>
     </>
   );
 }

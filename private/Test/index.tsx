@@ -9,45 +9,49 @@ import Translate from './Translate';
 import readElementOffset from './readElementOffset';
 import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
+import steps from './steps';
 
 interface P {
-  on: (whereToMove: [x: number, y: number]) => unknown;
+  on: (n: number) => unknown;
+  size: [number, number];
+  step: number;
 }
 
 // 🔴
 let _1 = 0;
 
-function Test({ on }: P) {
+function Test({ on, size, step }: P) {
   /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
+
+  const $isMouseDown = React.useRef(isMouseDown);
+  const $updateIsMouseDown = (isMouseDown: boolean) => {
+    $isMouseDown.current = isMouseDown;
+    updateIsMouseDown(isMouseDown);
+  };
+
   /* (2) */ const childElement = React.useRef<HTMLDivElement>();
-  /* (3) */ const translate = () => new Translate(childElement.current);
+  /* (3) */ const parentElement = React.useRef<HTMLDivElement>();
+
+  /* (4) */ const translate = () => new Translate(childElement.current);
 
   // (1)
   function onMouseDown(event: React.MouseEvent<HTMLElement>) {
-    const element = event.target as HTMLDivElement;
-
     const [currentTranslateX] = translate().read();
 
-    updateIsMouseDown(true);
+    $updateIsMouseDown(true);
 
-    const [elementMouseX] = readMouse(event);
-    const [elementOffsetX] = readElementOffset(element.parentElement);
+    const [elementMouseX] = readMouse(event as unknown as MouseEvent);
+    const [elementOffsetX] = readElementOffset(parentElement.current);
 
     //   | väčšie číslo
     _1 = elementMouseX - elementOffsetX - currentTranslateX;
-
-    console.log(`_1: ${_1}\nelementMouseX: ${elementMouseX}\nelementOffsetX: ${elementOffsetX}`);
   }
 
   // (2)
-  function onMouseMove(event: React.MouseEvent<HTMLElement>) {
-    if (isMouseDown) {
-      const element = event.currentTarget as HTMLDivElement;
-
+  function onMouseMove(event: MouseEvent) {
+    if ($isMouseDown.current) {
       const [elementMouseX] = readMouse(event);
-      const [elementOffsetX] = readElementOffset(element);
-
-      console.log(`elementMouseX: ${elementMouseX}\nelementOffsetX: ${elementOffsetX}`);
+      const [elementOffsetX] = readElementOffset(parentElement.current);
 
       //              | väčšie číslo
       let x: number = elementMouseX - elementOffsetX - _1;
@@ -56,22 +60,50 @@ function Test({ on }: P) {
       x = x > 0 ? x : 0;
 
       // <
-      const widthDifference = readElementWidth(element) - readElementWidth(childElement.current);
+      const widthDifference = readElementWidth(parentElement.current) - readElementWidth(childElement.current);
       x = x < widthDifference ? x : widthDifference;
 
       translate().write(x, 0);
 
-      on([x, 0]);
+      const _2: number = (x / widthDifference) * 100;
+
+      const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]);
+
+      on(_3);
     }
   }
 
   // (3)
   function onMouseUp() {
-    updateIsMouseDown(false);
+    $updateIsMouseDown(false);
   }
 
+  React.useEffect(() => {
+    on(size[0]);
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  const rows = [
+    `Size: ${size.join()}`,
+    `Step: ${step}`,
+    `Steps: ${steps(size, step).join()}`,
+    `isMouseDown: ${isMouseDown.toString()}`,
+    '\n',
+    `Child element width: ${childElement.current ? readElementWidth(childElement.current) : 0}px`,
+    `Parent element width: ${childElement.current ? readElementWidth(childElement.current.parentElement) : 0}px`,
+  ] as const;
+
+  console.log(rows.join('\n'));
+
   return (
-    <div className="test" onMouseMove={onMouseMove} onMouseUp={onMouseUp}>
+    <div className="test" ref={parentElement}>
       <div className="test__left" onMouseDown={onMouseDown} ref={childElement}></div>
     </div>
   );
