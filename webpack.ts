@@ -9,7 +9,7 @@ import webpack from 'webpack';
 const compiler = webpack(
   common({
     htmlTemplate: compileReact,
-    name: 'Playground'
+    name: 'Playground',
   })
 );
 
