@@ -1,3 +1,8 @@
+.test {
+  min-height: 100vh;
+  min-width: 100vw;
+  position: fixed;
+}
 .horizontal-number-slider {
   --left\(background-color\): #fff;
   --left\(height\): 1rem;

@@ -10,8 +10,8 @@ function Client() {
   const [price, updatePrice] = React.useState<number>(0);
 
   return (
-    <div className="container" mX="auto" pX="4">
-      <div mX="auto" width="6/12">
+    <div alignItems="center" className="test" display="flex" justifyContent="center">
+      <div width="8/12">
         <HorizontalNumberSlider mY="2" on={updatePrice} size={[25, 100]} />
         <div textAlign="center">{price.toFixed()} EUR</div>
       </div>
