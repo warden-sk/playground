@@ -9,7 +9,6 @@ import Translate from './Translate';
 import readElementOffset from './readElementOffset';
 import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
-import steps from './steps';
 
 interface P {
   on: (n: number) => unknown;
@@ -20,7 +19,7 @@ interface P {
 // 🔴
 let _1 = 0;
 
-function Test({ on, size, step }: P) {
+function HorizontalNumberSlider({ on, size }: P) {
   /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
 
   const $isMouseDown = React.useRef(isMouseDown);
@@ -91,10 +90,10 @@ function Test({ on, size, step }: P) {
   }, []);
 
   return (
-    <div className="test" ref={parentElement}>
-      <div className="test__left" onMouseDown={onMouseDown} ref={childElement} />
+    <div className="horizontal-number-slider" ref={parentElement}>
+      <div className="horizontal-number-slider__left" onMouseDown={onMouseDown} ref={childElement} />
     </div>
   );
 }
 
-export default Test;
+export default HorizontalNumberSlider;

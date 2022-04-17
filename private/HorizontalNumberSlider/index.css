@@ -1,9 +1,9 @@
-.test {
+.horizontal-number-slider {
   --line-height: 0.125rem;
 
   position: relative;
 }
-.test::after {
+.horizontal-number-slider::after {
   background-color: currentColor;
   border-radius: calc(var(--line-height) / 2);
   content: '';
@@ -15,7 +15,7 @@
   top: 50%;
   transform: translateY(-50%);
 }
-.test__left {
+.horizontal-number-slider__left {
   background-color: #fff;
   border: calc(var(--line-height) * 2) solid currentColor;
   border-radius: 50%;
