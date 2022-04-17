@@ -1,4 +1,7 @@
 .horizontal-number-slider {
+  --left\(background-color\): #fff;
+  --left\(height\): 1rem;
+  --left\(width\): var(--left\(height\));
   --line\(height\): 0.125rem;
 
   position: relative;
@@ -16,10 +19,11 @@
   transform: translateY(-50%);
 }
 .horizontal-number-slider__left {
-  background-color: currentColor;
+  background-color: var(--left\(background-color\));
+  border: var(--line\(height\)) solid currentColor;
   border-radius: 50%;
-  height: 1rem;
+  height: var(--left\(height\));
   position: relative;
-  width: 1rem;
+  width: var(--left\(width\));
   z-index: 1;
 }

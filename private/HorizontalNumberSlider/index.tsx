@@ -13,7 +13,6 @@ import readMouse from './readMouse';
 interface P extends A {
   on?: (n: number) => unknown;
   size: [number, number];
-  step?: number;
 }
 
 // 🔴

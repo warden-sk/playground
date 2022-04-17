@@ -3,12 +3,11 @@
  */
 
 import common from '@warden-sk/helpers/webpack/common';
-import compileReact from '@warden-sk/helpers/webpack/compileReact';
 import webpack from 'webpack';
 
 const compiler = webpack(
   common({
-    htmlTemplate: compileReact,
+    htmlTemplate: () => '<div id="client" />',
     name: 'Playground',
   })
 );

@@ -4,7 +4,7 @@
 
 import HorizontalNumberSlider from './HorizontalNumberSlider';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 function Client() {
   const [price, updatePrice] = React.useState<number>(0);
@@ -19,6 +19,4 @@ function Client() {
   );
 }
 
-typeof window !== 'undefined' && ReactDOM.hydrate(<Client />, document.getElementById('client'));
-
-export default <div id="client" />;
+ReactDOM.createRoot(document.getElementById('client')!).render(<Client />);
