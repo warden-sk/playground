@@ -11,53 +11,52 @@ import readElementWidth from './readElementWidth';
 import readMouse from './readMouse';
 
 interface P {
-  on: (whereToMove: [x: number, y: number]) => any;
+  on: (whereToMove: [x: number, y: number]) => unknown;
 }
 
-function Tatiana({ on }: P) {
-  let childElement: HTMLDivElement;
-  let isMouseDown = false;
-  let lastTranslateX = 0;
+// 🔴
+let _1 = 0;
 
-  // 🔴
-  let _1 = 0;
-
-  const translate = () => new Translate(childElement);
+function Test({ on }: P) {
+  /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
+  /* (2) */ const childElement = React.useRef<HTMLDivElement>();
+  /* (3) */ const translate = () => new Translate(childElement.current);
 
   // (1)
   function onMouseDown(event: React.MouseEvent<HTMLElement>) {
-    childElement = event.target as HTMLDivElement;
+    const element = event.target as HTMLDivElement;
 
-    isMouseDown = true;
-    [lastTranslateX] = translate().read();
+    const [currentTranslateX] = translate().read();
 
-    const [childElementMouseX] = readMouse(event);
-    const [childElementOffsetX] = readElementOffset(childElement.parentElement);
+    updateIsMouseDown(true);
 
-    console.log(`childElementMouseX: ${childElementMouseX}\nchildElementOffsetX: ${childElementOffsetX}`);
+    const [elementMouseX] = readMouse(event);
+    const [elementOffsetX] = readElementOffset(element.parentElement);
 
     //   | väčšie číslo
-    _1 = childElementMouseX - childElementOffsetX - lastTranslateX;
+    _1 = elementMouseX - elementOffsetX - currentTranslateX;
+
+    console.log(`_1: ${_1}\nelementMouseX: ${elementMouseX}\nelementOffsetX: ${elementOffsetX}`);
   }
 
   // (2)
   function onMouseMove(event: React.MouseEvent<HTMLElement>) {
     if (isMouseDown) {
-      const parentElement = event.currentTarget as HTMLDivElement;
+      const element = event.currentTarget as HTMLDivElement;
 
-      const [parentElementMouseX] = readMouse(event);
-      const [parentElementOffsetX] = readElementOffset(parentElement);
+      const [elementMouseX] = readMouse(event);
+      const [elementOffsetX] = readElementOffset(element);
 
-      console.log(`parentElementMouseX: ${parentElementMouseX}\nparentElementOffsetX: ${parentElementOffsetX}`);
+      console.log(`elementMouseX: ${elementMouseX}\nelementOffsetX: ${elementOffsetX}`);
 
       //              | väčšie číslo
-      let x: number = parentElementMouseX - parentElementOffsetX - _1;
+      let x: number = elementMouseX - elementOffsetX - _1;
 
       // >
       x = x > 0 ? x : 0;
 
       // <
-      const widthDifference = readElementWidth(parentElement) - readElementWidth(childElement);
+      const widthDifference = readElementWidth(element) - readElementWidth(childElement.current);
       x = x < widthDifference ? x : widthDifference;
 
       translate().write(x, 0);
@@ -68,25 +67,14 @@ function Tatiana({ on }: P) {
 
   // (3)
   function onMouseUp() {
-    isMouseDown = false;
+    updateIsMouseDown(false);
   }
 
-  return { onMouseDown, onMouseMove, onMouseUp };
-}
-
-function Test({ on }: P) {
-  const [tatiana, updateTatiana] = React.useState<ReturnType<typeof Tatiana>>();
-
-  React.useEffect(() => {
-    updateTatiana(Tatiana({ on }));
-  }, []);
-
-  if (typeof tatiana !== 'undefined')
-    return (
-      <div className="test" onMouseMove={tatiana.onMouseMove} onMouseUp={tatiana.onMouseUp}>
-        <div className="test__left" onMouseDown={tatiana.onMouseDown}></div>
-      </div>
-    );
+  return (
+    <div className="test" onMouseMove={onMouseMove} onMouseUp={onMouseUp}>
+      <div className="test__left" onMouseDown={onMouseDown} ref={childElement}></div>
+    </div>
+  );
 }
 
 export default Test;
