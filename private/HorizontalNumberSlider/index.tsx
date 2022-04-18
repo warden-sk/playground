@@ -92,7 +92,7 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
   return (
     <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>
       <div
-        className="horizontal-number-slider__left"
+        className={['horizontal-number-slider__left', { 'horizontal-number-slider__left_down': isMouseDown }]}
         onMouseDown={onMouseDown}
         onTouchStart={onMouseDown}
         ref={childElement}

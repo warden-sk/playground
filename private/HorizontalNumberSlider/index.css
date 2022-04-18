@@ -27,8 +27,12 @@
   background-color: var(--left\(background-color\));
   border: var(--line\(height\)) solid currentColor;
   border-radius: 50%;
+  cursor: grab;
   height: var(--left\(height\));
   position: relative;
   width: var(--left\(width\));
   z-index: 1;
+}
+.horizontal-number-slider__left_down {
+  cursor: grabbing;
 }
