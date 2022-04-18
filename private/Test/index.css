@@ -1,0 +1,48 @@
+.t-left,
+.t-right {
+  position: relative;
+}
+.t-left::before {
+  background-image: linear-gradient(
+    to right,
+    hsl(0, 0%, 100%),
+    hsla(0, 0%, 100%, 0)
+  );
+  left: 0;
+}
+.t-right::after {
+  background-image: linear-gradient(
+    to left,
+    hsl(0, 0%, 100%),
+    hsla(0, 0%, 100%, 0)
+  );
+  right: 0;
+}
+.t-left::before,
+.t-right::after {
+  bottom: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 4rem;
+  z-index: 1;
+}
+.t-container {
+  position: relative;
+}
+.t-chevron-left {
+  left: 0;
+}
+.t-chevron-right {
+  right: 0;
+}
+.t-chevron-left,
+.t-chevron-right {
+  color: var(--color\(purple\));
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
