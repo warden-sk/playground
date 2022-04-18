@@ -68,11 +68,11 @@ function Keyboard() {
 
     if (input.length === 5) {
       updateInput([]);
-      updateWords([input, ...words]);
+      updateWords([...words, input]);
     }
   }
 
-  function isMarked(key: number | string): string {
+  function isMarked(key: number | string, pos?: number): string {
     if (typeof key === 'number') {
       return '';
     }
@@ -80,7 +80,15 @@ function Keyboard() {
     const pismenaKtoreSiVypisal = words.flatMap(word => word);
     const pismenaKtoreSiUhadol = currentWord.filter(key => pismenaKtoreSiVypisal.includes(key));
 
-    return pismenaKtoreSiUhadol.includes(key) ? 'rgb(0, 128, 0)' : '';
+    if (pos !== undefined) {
+      return currentWord[pos] === key ? 'rgb(0, 128, 0)' : pismenaKtoreSiUhadol.includes(key) ? 'rgb(128, 128, 0)' : '';
+    }
+
+    return pismenaKtoreSiUhadol.includes(key)
+      ? 'rgb(0, 128, 0)'
+      : pismenaKtoreSiVypisal.includes(key)
+      ? 'hsl(0, 0%, 25%)'
+      : '';
   }
 
   const rows = [
@@ -103,8 +111,8 @@ function Keyboard() {
         {words.map((word, i) => (
           <div alignItems="center" className="input" display="flex" justifyContent="center" mY="2">
             <div mX="1">{i + 1}.</div>
-            {word.map(key => (
-              <div className="input__key" mX="1" p="2" style={{ backgroundColor: isMarked(key) }}>
+            {word.map((key, j) => (
+              <div className="input__key" mX="1" p="2" style={{ backgroundColor: isMarked(key, j) }}>
                 {key}
               </div>
             ))}
