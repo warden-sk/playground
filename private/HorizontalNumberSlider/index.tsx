@@ -56,7 +56,6 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
 
       translate().write(x, 0);
 
-      // (3)
       const _2: number = (x / width) * 100; /* (?) */
 
       const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]); /* (?) */
@@ -72,7 +71,9 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
 
   React.useEffect(() => {
     on?.(size[0]);
+  }, []);
 
+  React.useEffect(() => {
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('touchmove', onMouseMove);
 
