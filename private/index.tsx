@@ -13,25 +13,29 @@ function Client() {
   const [price, updatePrice] = React.useState<number>(0);
 
   return (
-    <div className="container" mX="auto">
+    <div className="container" mX="auto" pX="4">
       <div mY="8">
         <h1 fontSize="4" mB="4">
           Test
         </h1>
-        <Test SIZE={72} display="flex" mX="!4">
-          {[...new Array(12)].map(() => (
-            <div flex="none" pX="4" width="4/12">
-              <div className="filler" />
-            </div>
-          ))}
-        </Test>
+        <div mX="!2">
+          <Test SIZE={72} display="flex">
+            {[...new Array(12)].map(() => (
+              <div flex="none" pX="2" width="4/12">
+                <div className="filler" />
+              </div>
+            ))}
+          </Test>
+        </div>
       </div>
       <div mY="8">
-        <h1 fontSize="4" mB="4">
+        <h1 alignItems="center" display="flex" fontSize="4" mB="4">
           HorizontalNumberSlider
+          <div fontSize="2" mL="auto">
+            {price.toFixed()} EUR
+          </div>
         </h1>
-        <HorizontalNumberSlider mY="4" on={updatePrice} size={[25, 100]} />
-        <div textAlign="center">{price.toFixed()} EUR</div>
+        <HorizontalNumberSlider on={updatePrice} size={[25, 100]} />
       </div>
     </div>
   );
