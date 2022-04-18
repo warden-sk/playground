@@ -15,30 +15,23 @@ interface P extends A {
   size: [number, number];
 }
 
-let _1 = 0;
+let _1 = 0; /* (?) */
 
 function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.IntrinsicElements['div'] & P) {
   /* (1) */ const [isMouseDown, updateIsMouseDown] = React.useState<boolean>(false);
 
-  const $isMouseDown = React.useRef(isMouseDown);
-
-  const $updateIsMouseDown = (isMouseDown: boolean) => {
-    $isMouseDown.current = isMouseDown;
-    updateIsMouseDown(isMouseDown);
-  };
-
-  /* (2) */ const childElement = React.useRef<HTMLDivElement>();
-  /* (3) */ const parentElement = React.useRef<HTMLDivElement>();
+  /* (2) */ const childElement = React.useRef<HTMLDivElement>(null);
+  /* (3) */ const parentElement = React.useRef<HTMLDivElement>(null);
 
   /* (4) */ const translate = () => new Translate(childElement.current!);
 
   // (1)
-  function onMouseDown(event: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>) {
+  function onMouseDown(event: React.MouseEvent | React.TouchEvent) {
     const [currentTranslateX] = translate().read();
 
-    $updateIsMouseDown(true);
+    updateIsMouseDown(true);
 
-    const [elementMouseX] = readMouse(event);
+    const [elementMouseX] = readMouse(event.nativeEvent);
     const [elementOffsetX] = readElementOffset(parentElement.current!);
 
     //   | väčšie číslo
@@ -47,7 +40,7 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
 
   // (2)
   function onMouseMove(event: MouseEvent | TouchEvent) {
-    if ($isMouseDown.current) {
+    if (isMouseDown) {
       const [elementMouseX] = readMouse(event);
       const [elementOffsetX] = readElementOffset(parentElement.current!);
 
@@ -58,15 +51,15 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
       x = x > 0 ? x : 0;
 
       // <
-      const width = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!);
+      const width = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!); /* (?) */
       x = x < width ? x : width;
 
       translate().write(x, 0);
 
       // (3)
-      const _2: number = (x / width) * 100;
+      const _2: number = (x / width) * 100; /* (?) */
 
-      const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]);
+      const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]); /* (?) */
 
       on?.(_3);
     }
@@ -74,7 +67,7 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
 
   // (3)
   function onMouseUp() {
-    $updateIsMouseDown(false);
+    updateIsMouseDown(false);
   }
 
   React.useEffect(() => {
@@ -93,7 +86,7 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('touchend', onMouseUp);
     };
-  }, []);
+  }, [isMouseDown]);
 
   return (
     <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>
