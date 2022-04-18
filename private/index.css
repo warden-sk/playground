@@ -1,6 +1,5 @@
 .filler {
   background-color: hsl(0, 0%, 50%);
   border: 0.125rem solid currentColor;
-  border-radius: 0.125rem;
   padding-bottom: 150%;
 }

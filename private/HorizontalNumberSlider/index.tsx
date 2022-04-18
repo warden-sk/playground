@@ -8,11 +8,11 @@ import React from 'react';
 import Translate from './Translate';
 import readElementOffset from './readElementOffset';
 import readElementWidth from './readElementWidth';
-import readMouse from './readMouse';
+import readMouseCoordinates from './readMouseCoordinates';
 
 interface P extends A {
-  on?: (left: number) => unknown;
-  size: [number, number];
+  on?: (calculated: number) => unknown;
+  size: [from: number, to: number];
 }
 
 let _1 = 0; /* (?) */
@@ -31,36 +31,40 @@ function HorizontalNumberSlider({ className, on, size, ...attributes }: JSX.Intr
 
     updateIsMouseDown(true);
 
-    const [elementMouseX] = readMouse(event.nativeEvent);
-    const [elementOffsetX] = readElementOffset(parentElement.current!);
+    const [mouseX] = readMouseCoordinates(event.nativeEvent);
+    const [parentElementOffsetX] = readElementOffset(parentElement.current!);
 
     //   | väčšie číslo
-    _1 = elementMouseX - elementOffsetX - currentTranslateX;
+    _1 = mouseX - parentElementOffsetX - currentTranslateX;
   }
 
   // (2)
   function onMouseMove(event: MouseEvent | TouchEvent) {
     if (isMouseDown) {
-      const [elementMouseX] = readMouse(event);
-      const [elementOffsetX] = readElementOffset(parentElement.current!);
+      const [mouseX] = readMouseCoordinates(event);
+      const [parentElementOffsetX] = readElementOffset(parentElement.current!);
 
       //              | väčšie číslo
-      let x: number = elementMouseX - elementOffsetX - _1;
+      let x: number = mouseX - parentElementOffsetX - _1;
 
       // >
       x = x > 0 ? x : 0;
 
       // <
-      const width = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!); /* (?) */
-      x = x < width ? x : width;
+      const rightBorder = readElementWidth(parentElement.current!) - readElementWidth(childElement.current!);
+      x = x < rightBorder ? x : rightBorder;
 
       translate().write(x, 0);
 
-      const _2: number = (x / width) * 100; /* (?) */
+      /**
+       * Calculation
+       */
 
-      const _3: number = size[0] + (_2 / 100) * (size[1] - size[0]); /* (?) */
+      /* (1) */ let calculated: number = (x / rightBorder) * 100;
 
-      on?.(_3);
+      /* (2) */ calculated = size[0] + (calculated / 100) * (size[1] - size[0]);
+
+      on?.(calculated);
     }
   }
 
