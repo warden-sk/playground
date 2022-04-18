@@ -5,6 +5,7 @@
 import './index.css';
 
 import HorizontalNumberSlider from './HorizontalNumberSlider';
+import Keyboard from './Keyboard';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Test from './Test';
@@ -14,6 +15,7 @@ function Client() {
 
   return (
     <div className="container" mX="auto" pX="4">
+      <Keyboard />
       {/* <div mY="8">
         <h1 fontSize="4" mB="4">
           Test
@@ -28,7 +30,7 @@ function Client() {
           </Test>
         </div>
       </div> */}
-      <div mY="8">
+      {/* <div mY="8">
         <h1 alignItems="center" display="flex" fontSize="4" mB="4">
           HorizontalNumberSlider
           <div fontSize="2" mL="auto">
@@ -36,7 +38,7 @@ function Client() {
           </div>
         </h1>
         <HorizontalNumberSlider on={updatePrice} size={[25, 100]} />
-      </div>
+      </div> */}
     </div>
   );
 }

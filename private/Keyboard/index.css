@@ -1,0 +1,14 @@
+.input {
+}
+.input__key {
+  background-color: rgb(128, 128, 128);
+  border-radius: 0.125rem;
+  color: #fff;
+}
+.keyboard {
+}
+.keyboard__key {
+  background-color: rgb(64, 64, 64);
+  border-radius: 0.125rem;
+  color: #fff;
+}
