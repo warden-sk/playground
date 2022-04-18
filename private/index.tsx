@@ -14,7 +14,7 @@ function Client() {
 
   return (
     <div className="container" mX="auto" pX="4">
-      <div mY="8">
+      {/* <div mY="8">
         <h1 fontSize="4" mB="4">
           Test
         </h1>
@@ -27,7 +27,7 @@ function Client() {
             ))}
           </Test>
         </div>
-      </div>
+      </div> */}
       <div mY="8">
         <h1 alignItems="center" display="flex" fontSize="4" mB="4">
           HorizontalNumberSlider
