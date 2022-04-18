@@ -6,7 +6,7 @@
 }
 .horizontal-number-slider {
   --left\(background-color\): #fff;
-  --left\(height\): 1.5rem;
+  --left\(height\): 2rem;
   --left\(width\): var(--left\(height\));
   --line\(height\): 0.125rem;
 
