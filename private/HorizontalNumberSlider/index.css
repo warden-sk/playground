@@ -28,7 +28,6 @@
   background-color: var(--left\(background-color\));
   border: var(--line\(height\)) solid currentColor;
   border-radius: 50%;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
   cursor: pointer;
   height: var(--left\(height\));
   position: absolute;
