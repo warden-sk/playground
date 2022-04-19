@@ -14,7 +14,7 @@ interface P {
   children?: React.ReactNode;
 }
 
-function Test({ SIZE, VELOCITY = 0.75, children, ..._1 }: B<JSX.IntrinsicElements['div']> & P) {
+function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ..._1 }: B<JSX.IntrinsicElements['div']> & P) {
   const [isLeft, updateIsLeft] = useState<boolean>(false);
   const [isRight, updateIsRight] = useState<boolean>(false);
   const [o, updateO] = useState<O>();
@@ -52,4 +52,4 @@ function Test({ SIZE, VELOCITY = 0.75, children, ..._1 }: B<JSX.IntrinsicElement
   );
 }
 
-export default Test;
+export default HorizontalSlider;
