@@ -98,7 +98,7 @@ function Keyboard() {
   ] as const;
 
   return (
-    <div className="game">
+    <div className="game" pY="4">
       <div alignItems="center" className="input" display="flex" justifyContent="center" mY="4">
         {input.length !== 0 && <div mX="1">písmeno {input.length}/5</div>}
         {input.map(key => (
