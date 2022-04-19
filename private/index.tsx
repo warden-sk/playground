@@ -45,7 +45,7 @@ function Client() {
                   style={{
                     backgroundColor: 'hsl(0, 0%, 25%)',
                     borderRadius: '0.125rem',
-                    paddingBottom: Math.random() > 0.5 ? '150%' : '125%',
+                    paddingBottom: '150%',
                   }}
                 />
               </div>
