@@ -40,7 +40,7 @@ function Client() {
         <div mX="!2">
           <HorizontalSlider SIZE={72} display="flex">
             {[...new Array(12)].map(() => (
-              <div flex="none" pX="2" width="4/12">
+              <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
                 <div className="filler" />
               </div>
             ))}
