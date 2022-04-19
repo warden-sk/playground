@@ -15,12 +15,12 @@ function Client() {
   return (
     <div className="container" mX="auto" pX="4">
       <div mY="8">
-        <h1 alignItems="baseline" display="flex" fontSize="4" mB="4">
+        <h1 alignItems="baseline" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto' }}>
           HorizontalNumberSlider
-          <div className="variable" fontSize="1" mX="2" onClick={() => updateHasRight(!hasRight)} pX="2">
+          <div className="variable" fontSize="1" mX="4" onClick={() => updateHasRight(!hasRight)} pX="2">
             hasRight
           </div>
-          <div fontSize="2" mL="auto">
+          <div flex="none" fontSize="2" mL="auto">
             {hasRight ? `od ${price[0].toFixed()} do ${price[1].toFixed()}` : `od ${price[0].toFixed()}`} EUR
           </div>
         </h1>

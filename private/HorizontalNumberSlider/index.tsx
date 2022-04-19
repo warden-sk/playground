@@ -40,13 +40,7 @@ function HorizontalNumberSlider({ className, hasRight, on, size, ...attributes }
   } as const;
 
   const currentDirection = (): 'left' | 'right' => {
-    return isMouseDown['left']
-      ? 'left'
-      : isMouseDown['right']
-      ? 'right'
-      : (() => {
-          throw new Error('lol');
-        })();
+    return isMouseDown['left'] ? 'left' : isMouseDown['right'] ? 'right' : 'right';
   };
 
   const translate = (direction: 'left' | 'right' = currentDirection()) =>
