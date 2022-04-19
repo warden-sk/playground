@@ -10,6 +10,9 @@
 
   --line\(height\): 0.125rem;
 
+  --right\(background-color\): #000;
+
+  height: var(--left\(height\));
   position: relative;
 }
 .horizontal-number-slider::after {
@@ -30,7 +33,10 @@
   border: var(--line\(height\)) solid currentColor;
   border-radius: 50%;
   height: var(--left\(height\));
-  position: relative;
+  position: absolute;
   width: var(--left\(width\));
   z-index: 1;
+}
+.horizontal-number-slider__right {
+  background-color: var(--right\(background-color\));
 }

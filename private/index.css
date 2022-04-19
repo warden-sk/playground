@@ -1,5 +1,8 @@
-.filler {
-  background-color: hsl(0, 0%, 50%);
-  border: 0.125rem solid currentColor;
-  padding-bottom: 150%;
+body {
+  background-color: hsl(0, 0%, 12.5%);
+  color: hsl(0, 0%, 50%);
+}
+.horizontal-number-slider {
+  --left\(background-color\): rgb(128, 0, 0) !important;
+  --right\(background-color\): rgb(0, 0, 128) !important;
 }
