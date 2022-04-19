@@ -28,7 +28,7 @@ function Client() {
             hasRight
           </div>
           <div fontSize="2" mL="auto">
-            {hasRight ? `from ${price[0].toFixed()} to ${price[1].toFixed()}` : `from ${price[0].toFixed()}`} EUR
+            {hasRight ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
           </div>
         </h1>
         <HorizontalNumberSlider hasRight={hasRight} on={updatePrice} size={[25, 100]} />

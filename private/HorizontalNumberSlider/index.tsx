@@ -106,7 +106,7 @@ function HorizontalNumberSlider({ className, hasRight, on, size, ...attributes }
           ..._1,
           [currentDirection()]: {
             ..._1[currentDirection()],
-            calculated,
+            calculated: +calculated.toFixed(),
           },
         };
 
