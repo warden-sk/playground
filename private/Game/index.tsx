@@ -100,7 +100,7 @@ function Keyboard() {
   return (
     <div className="game" pY="4">
       <div alignItems="center" className="input" display="flex" justifyContent="center" mY="4">
-        {input.length !== 0 && <div mX="1">písmeno {input.length}/5</div>}
+        <div mX="1">písmeno {input.length}/5</div>
         {input.map(key => (
           <div className="input__key" mX="1" p="2">
             {key}
@@ -108,16 +108,20 @@ function Keyboard() {
         ))}
       </div>
       <div mY="4">
-        {words.map((word, i) => (
-          <div alignItems="center" className="input" display="flex" justifyContent="center" mY="2">
-            <div mX="1">{i + 1}.</div>
-            {word.map((key, j) => (
-              <div className="input__key" mX="1" p="2" style={{ backgroundColor: isMarked(key, j) }}>
-                {key}
-              </div>
-            ))}
-          </div>
-        ))}
+        {words.length ? (
+          words.map((word, i) => (
+            <div alignItems="center" className="input" display="flex" justifyContent="center" mY="2">
+              <div mX="1">{i + 1}.</div>
+              {word.map((key, j) => (
+                <div className="input__key" mX="1" p="2" style={{ backgroundColor: isMarked(key, j) }}>
+                  {key}
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <div textAlign="center">Žiadne slová.</div>
+        )}
       </div>
       <div className="keyboard">
         {rows.map(keys => (

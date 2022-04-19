@@ -4,8 +4,8 @@
 
 import './index.css';
 
+import Game from './Game';
 import HorizontalNumberSlider from './HorizontalNumberSlider';
-import Keyboard from './Keyboard';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -46,7 +46,7 @@ function Client() {
     <div className="container" mX="auto" pX="4">
       <A />
       <B />
-      <Keyboard />
+      <Game />
     </div>
   );
 }
