@@ -7,3 +7,6 @@ body {
   border-radius: 0.125rem;
   cursor: pointer;
 }
+.variable_active {
+  border: 0.125rem solid hsl(0, 0%, 50%);
+}

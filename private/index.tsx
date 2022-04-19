@@ -17,7 +17,13 @@ function Client() {
       <div mY="8">
         <h1 alignItems="baseline" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
           HorizontalNumberSlider
-          <div className="variable" fontSize="1" mX="4" onClick={() => updateHasRight(!hasRight)} pX="2">
+          <div
+            className={['variable', { variable_active: hasRight }]}
+            fontSize="1"
+            mX="4"
+            onClick={() => updateHasRight(!hasRight)}
+            pX="2"
+          >
             hasRight
           </div>
           <div fontSize="2" mL="auto">
