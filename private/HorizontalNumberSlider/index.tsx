@@ -108,30 +108,29 @@ function HorizontalNumberSlider({ className, hasRight, on, size, ...attributes }
 
   React.useEffect(() => {
     valStorageCaltulat.left = size[0];
-    valStorageCaltulat.right = size[1];
 
     on?.(size);
-
-    if (hasRight) {
-      const rightBorder = readElementWidth(parentElement.current!) - readElementWidth(elementStorage['right'].current!);
-
-      translate('right').write(rightBorder, 0);
-    }
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('touchmove', onMouseMove);
+    if (hasRight) {
+      valStorageCaltulat.right = size[1];
 
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('touchend', onMouseUp);
+      const rightBorder = readElementWidth(parentElement.current!) - readElementWidth(elementStorage['right'].current!);
+
+      translate('right').write(rightBorder, 0);
+
+      on?.([valStorageCaltulat.left, valStorageCaltulat.right]);
+    }
+  }, [hasRight]);
+
+  React.useEffect(() => {
+    (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
+    (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('touchmove', onMouseMove);
-
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('touchend', onMouseUp);
+      (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
+      (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
     };
   }, [isMouseDown]);
 
