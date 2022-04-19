@@ -2,7 +2,3 @@ body {
   background-color: hsl(0, 0%, 12.5%);
   color: hsl(0, 0%, 50%);
 }
-.horizontal-number-slider {
-  --left\(background-color\): rgb(128, 0, 0) !important;
-  --right\(background-color\): rgb(0, 0, 128) !important;
-}

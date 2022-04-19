@@ -31,7 +31,7 @@ function KeyboardKey({ backgroundColor, className, k, on, onClick, ...attributes
 }
 
 function Keyboard() {
-  const currentWord: string[] = ['L', 'A', 'S', 'K', 'A'];
+  const currentWord: string[] = ['D', 'E', 'N', 'I', 'S'];
 
   const [input, updateInput] = React.useState<string[]>([]);
   const [words, updateWords] = React.useState<string[][]>([]);
@@ -98,7 +98,7 @@ function Keyboard() {
   ] as const;
 
   return (
-    <div className="game" pY="4">
+    <div className="game" p="4">
       <div alignItems="center" className="input" display="flex" justifyContent="center" mY="4">
         <div mX="1">písmeno {input.length}/5</div>
         {input.map(key => (
