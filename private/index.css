@@ -2,11 +2,6 @@ body {
   background-color: hsl(0, 0%, 12.5%);
   color: hsl(0, 0%, 50%);
 }
-.filler {
-  background-color: hsl(0, 0%, 25%);
-  border-radius: 0.125rem;
-  padding-bottom: 150%;
-}
 .variable {
   background-color: hsl(0, 0%, 25%);
   border-radius: 0.125rem;

@@ -28,7 +28,7 @@ function Client() {
             hasRight
           </div>
           <div fontSize="2" mL="auto">
-            {hasRight ? `od ${price[0].toFixed()} do ${price[1].toFixed()}` : `od ${price[0].toFixed()}`} EUR
+            {hasRight ? `from ${price[0].toFixed()} to ${price[1].toFixed()}` : `from ${price[0].toFixed()}`} EUR
           </div>
         </h1>
         <HorizontalNumberSlider hasRight={hasRight} on={updatePrice} size={[25, 100]} />
@@ -38,10 +38,16 @@ function Client() {
           HorizontalSlider
         </h1>
         <div mX="!2">
-          <HorizontalSlider SIZE={72} display="flex">
+          <HorizontalSlider SIZE={72} alignItems="center" display="flex">
             {[...new Array(12)].map(() => (
               <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
-                <div className="filler" />
+                <div
+                  style={{
+                    backgroundColor: 'hsl(0, 0%, 25%)',
+                    borderRadius: '0.125rem',
+                    paddingBottom: Math.random() > 0.5 ? '150%' : '125%',
+                  }}
+                />
               </div>
             ))}
           </HorizontalSlider>
