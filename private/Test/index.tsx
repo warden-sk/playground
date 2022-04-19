@@ -40,7 +40,7 @@ function Test({ SIZE, VELOCITY = 0.75, children, ..._1 }: B<JSX.IntrinsicElement
   }, [children]);
 
   return (
-    <div className="t-container">
+    <div className="t">
       {isLeft && <ChevronLeft className="t-chevron-left" size={SIZE} />}
       <div style={{ overflow: 'hidden' }}>
         <div {..._1} ref={element}>
