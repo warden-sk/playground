@@ -7,6 +7,7 @@ import './index.css';
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import Translate from '../HorizontalNumberSlider/Translate';
+import readMouseOffset from '../HorizontalNumberSlider/readMouseOffset';
 
 interface P {
   SIZE?: number;
@@ -29,8 +30,8 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
 
     const position: [x: number, y: number] = [0, 0];
-    const start: [x: number, y: number] = [0, 0];
     let isDown = false;
+    let start: [x: number, y: number] = [0, 0];
     let startTime: number = +new Date();
 
     function setTranslate(x: number, y: number) {
@@ -78,34 +79,26 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     }
 
     ['mousedown', 'touchstart'].forEach(type =>
-      parentElement.current!.addEventListener(type, e => {
+      parentElement.current!.addEventListener(type, event => {
         startTime = +new Date();
         endInertia();
 
         isDown = true;
-        // @ts-ignore
-        start[0] = e.pageX ?? e.touches[0].pageX;
-        // @ts-ignore
-        start[1] = e.pageY ?? e.touches[0].pageY;
+        start = readMouseOffset(event);
       })
     );
 
-    parentElement.current!.addEventListener('mouseleave', () => {
-      isDown = false;
-    });
-
     ['mousemove', 'touchmove'].forEach(type =>
-      parentElement.current!.addEventListener(type, e => {
+      parentElement.current!.addEventListener(type, event => {
         if (!isDown) return;
 
-        e.preventDefault();
+        event.preventDefault();
 
         let lastTranslateX = 0;
         let lastTranslateY = 0;
 
         if (X) {
-          // @ts-ignore
-          const x = e.pageX ?? e.touches[0].pageX;
+          const [x] = readMouseOffset(event);
 
           // left-to-right
           if (x > start[0]) lastTranslateX = position[0] + x - start[0];
@@ -115,8 +108,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
         }
 
         if (Y) {
-          // @ts-ignore
-          const y = e.pageY ?? e.touches[0].pageY;
+          const [, y] = readMouseOffset(event);
 
           // top-to-bottom
           if (y > start[1]) lastTranslateY = position[1] + y - start[1];
@@ -146,6 +138,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
         position[1] = translate[1];
 
         const endTime = +new Date();
+
         if (endTime - startTime < 375) startInertia();
       })
     );
