@@ -12,7 +12,7 @@ import readMouseOffset from './readMouseOffset';
 
 interface P {
   hasRight?: boolean;
-  on: (calculated: [left: number, right: number]) => unknown;
+  on: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
 }
 
