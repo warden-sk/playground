@@ -42,7 +42,7 @@ function B() {
         HorizontalSlider
       </h1>
       <HorizontalSlider SIZE={48} alignItems="center" display="flex" mX="!2">
-        {[...new Array(3)].map(() => (
+        {[...new Array(12)].map(() => (
           <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               style={{
