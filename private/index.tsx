@@ -42,7 +42,7 @@ function B() {
         HorizontalSlider
       </h1>
       <HorizontalSlider SIZE={48} alignItems="center" display="flex" mX="!2">
-        {[...new Array(12)].map(() => (
+        {[...new Array(3)].map(() => (
           <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               style={{
@@ -60,10 +60,12 @@ function B() {
 
 function Client() {
   return (
-    <div className="container" mX="auto" pX="4">
-      <A />
-      <B />
-    </div>
+    <React.StrictMode>
+      <div className="container" mX="auto" pX="4">
+        <A />
+        <B />
+      </div>
+    </React.StrictMode>
   );
 }
 
