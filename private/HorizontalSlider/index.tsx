@@ -22,8 +22,6 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
   const parentElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const IS_LEFT = updateIsLeft;
-    const IS_RIGHT = updateIsRight;
     const X = true;
     const Y = true;
     const height = parentElement.current!.scrollHeight - parentElement.current!.clientHeight;
@@ -58,18 +56,18 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       const [translateX] = new Translate(childElement.current!).read();
 
       if (translateX === 0) {
-        IS_LEFT?.(false);
+        updateIsLeft(false);
         parentElement.current!.classList.remove('t-left');
       } else {
-        IS_LEFT?.(true);
+        updateIsLeft(true);
         parentElement.current!.classList.add('t-left');
       }
 
       if (translateX === width * -1) {
-        IS_RIGHT?.(false);
+        updateIsRight(false);
         parentElement.current!.classList.remove('t-right');
       } else {
-        IS_RIGHT?.(true);
+        updateIsRight(true);
         parentElement.current!.classList.add('t-right');
       }
     }
@@ -177,7 +175,12 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
     /* (1) */ update();
     /* (2) */ updateSize();
-  }, []);
+
+    window.addEventListener('resize', () => {
+      /* (1) */ update();
+      /* (2) */ updateSize();
+    });
+  }, [children]);
 
   return (
     <div className="t">
