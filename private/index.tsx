@@ -41,8 +41,8 @@ function B() {
       <h1 fontSize="4" mB="4">
         HorizontalSlider
       </h1>
-      <HorizontalSlider SIZE={48} alignItems="center" display="flex" mX="!2">
-        {[...new Array(12)].map(() => (
+      <HorizontalSlider SIZE={48} alignItems="center" display="flex">
+        {[...new Array(6)].map(() => (
           <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               style={{

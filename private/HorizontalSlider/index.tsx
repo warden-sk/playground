@@ -6,6 +6,7 @@ import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import React, { useEffect, useRef, useState } from 'react';
+import Translate from '../HorizontalNumberSlider/Translate';
 
 interface P {
   SIZE?: number;
@@ -16,74 +17,68 @@ interface P {
 function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<JSX.IntrinsicElements['div']> & P) {
   const [isLeft, updateIsLeft] = useState<boolean>(false);
   const [isRight, updateIsRight] = useState<boolean>(false);
-  const element = useRef<HTMLDivElement>(null);
+  const childElement = useRef<HTMLDivElement>(null);
+  const parentElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const IS_LEFT = updateIsLeft;
     const IS_RIGHT = updateIsRight;
-    const ELEMENT = element.current!;
     const X = true;
-    const Y = false;
-    const parent = ELEMENT.parentElement!;
-
-    const height = parent.scrollHeight - parent.clientHeight;
-    let width = parent.scrollWidth - parent.clientWidth;
+    const Y = true;
+    const height = parentElement.current!.scrollHeight - parentElement.current!.clientHeight;
+    let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
 
     const position: [x: number, y: number] = [0, 0];
     const start: [x: number, y: number] = [0, 0];
     let isDown = false;
     let startTime: number = +new Date();
 
-    const currentTranslate: [x: number, y: number] = [0, 0];
-
-    function getTranslate(): [number, number] {
-      return currentTranslate;
-    }
-
     function setTranslate(x: number, y: number) {
+      const translate = new Translate(childElement.current!);
+
       if (x) {
         x = x < 0 ? x : 0;
         x = x > width * -1 ? x : width * -1;
 
-        currentTranslate[0] = x;
-        ELEMENT.style.transform = `translate(${x}px,${currentTranslate[1]}px)`;
+        translate.write(x, translate.read()[1]);
       }
+
       if (y) {
         y = y < 0 ? y : 0;
         y = y > height * -1 ? y : height * -1;
 
-        currentTranslate[1] = y;
-        ELEMENT.style.transform = `translate(${currentTranslate[0]}px,${y}px)`;
+        translate.write(translate.read()[0], y);
       }
+
       update();
     }
 
     function update() {
-      const [x] = getTranslate();
+      const [translateX] = new Translate(childElement.current!).read();
 
-      if (x === 0) {
+      if (translateX === 0) {
         IS_LEFT?.(false);
-        parent.classList.remove('t-left');
+        parentElement.current!.classList.remove('t-left');
       } else {
         IS_LEFT?.(true);
-        parent.classList.add('t-left');
+        parentElement.current!.classList.add('t-left');
       }
 
-      if (x === width * -1) {
+      if (translateX === width * -1) {
         IS_RIGHT?.(false);
-        parent.classList.remove('t-right');
+        parentElement.current!.classList.remove('t-right');
       } else {
         IS_RIGHT?.(true);
-        parent.classList.add('t-right');
+        parentElement.current!.classList.add('t-right');
       }
     }
 
     function updateSize() {
-      width = parent.scrollWidth - parent.clientWidth;
+      width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
     }
 
     ['mousedown', 'touchstart'].forEach(type =>
-      parent.addEventListener(type, e => {
+      parentElement.current!.addEventListener(type, e => {
         startTime = +new Date();
         endInertia();
 
@@ -95,12 +90,12 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       })
     );
 
-    parent.addEventListener('mouseleave', () => {
+    parentElement.current!.addEventListener('mouseleave', () => {
       isDown = false;
     });
 
     ['mousemove', 'touchmove'].forEach(type =>
-      parent.addEventListener(type, e => {
+      parentElement.current!.addEventListener(type, e => {
         if (!isDown) return;
 
         e.preventDefault();
@@ -135,10 +130,10 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     );
 
     ['mouseup', 'touchend'].forEach(type =>
-      parent.addEventListener(type, () => {
+      parentElement.current!.addEventListener(type, () => {
         isDown = false;
 
-        const translate = getTranslate();
+        const translate = new Translate(childElement.current!).read();
 
         // X
         velocityX[1] = translate[0] - position[0];
@@ -163,7 +158,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     function endInertia() {
       cancelAnimationFrame(idOfInertia);
 
-      const translate = getTranslate();
+      const translate = new Translate(childElement.current!).read();
 
       position[0] = translate[0];
       position[1] = translate[1];
@@ -182,18 +177,20 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       velocityX[1] *= VELOCITY;
       velocityY[1] *= VELOCITY;
 
-      if (Math.abs(velocityX[1]) > 0.5 || Math.abs(velocityY[1]) > 0.5) idOfInertia = requestAnimationFrame(inertia);
+      if (Math.abs(velocityX[1]) > 0.5 || Math.abs(velocityY[1]) > 0.5) {
+        idOfInertia = requestAnimationFrame(inertia);
+      }
     }
 
-    /* (2) */ update();
-    /* (1) */ updateSize();
+    /* (1) */ update();
+    /* (2) */ updateSize();
   }, []);
 
   return (
     <div className="t">
       {isLeft && <ChevronLeft className="t-chevron-left" size={SIZE} />}
-      <div style={{ overflow: 'hidden' }}>
-        <div {...attributes} ref={element}>
+      <div ref={parentElement} style={{ overflow: 'hidden' }}>
+        <div {...attributes} ref={childElement}>
           {children}
         </div>
       </div>
