@@ -3,15 +3,22 @@
 }
 .t-chevron-left,
 .t-chevron-right {
+  --chevron\(background-color\): #000;
+  --chevron\(color\): #fff;
+
+  background-color: var(--chevron\(background-color\));
+  border-radius: 50%;
+  color: var(--chevron\(color\));
   cursor: pointer;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   z-index: 1;
 }
 .t-chevron-left {
   left: 0;
+  transform: translate(50%, -50%);
 }
 .t-chevron-right {
   right: 0;
+  transform: translate(-50%, -50%);
 }

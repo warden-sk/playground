@@ -41,21 +41,19 @@ function B() {
       <h1 fontSize="4" mB="4">
         HorizontalSlider
       </h1>
-      <div mX="!2">
-        <HorizontalSlider SIZE={72} alignItems="center" display="flex">
-          {[...new Array(12)].map(() => (
-            <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
-              <div
-                style={{
-                  backgroundColor: 'hsl(0, 0%, 25%)',
-                  borderRadius: '0.125rem',
-                  paddingBottom: '150%',
-                }}
-              />
-            </div>
-          ))}
-        </HorizontalSlider>
-      </div>
+      <HorizontalSlider SIZE={48} alignItems="center" display="flex" mX="!2">
+        {[...new Array(12)].map(() => (
+          <div flex="none" pX="2" width={['6/12', { '#': '4/12' }]}>
+            <div
+              style={{
+                backgroundColor: 'hsl(0, 0%, 25%)',
+                borderRadius: '0.125rem',
+                paddingBottom: '150%',
+              }}
+            />
+          </div>
+        ))}
+      </HorizontalSlider>
     </div>
   );
 }
