@@ -26,8 +26,8 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
     let isDown = false;
     let positionX = 0;
-    let start: [x: number, y: number] = [0, 0];
     let startTime: number = +new Date();
+    let startX = 0;
 
     function setTranslate(x: number) {
       if (x) {
@@ -72,7 +72,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
         endInertia();
 
         isDown = true;
-        start = readMouseOffset(event);
+        [startX] = readMouseOffset(event);
       })
     );
 
@@ -84,10 +84,10 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
           const [x] = readMouseOffset(event);
 
           // left-to-right
-          if (x > start[0]) lastTranslate[0] = positionX + x - start[0];
+          if (x > startX) lastTranslate[0] = positionX + x - startX;
 
           // right-to-left
-          if (x < start[0]) lastTranslate[0] = positionX - start[0] + x;
+          if (x < startX) lastTranslate[0] = positionX - startX + x;
 
           setTranslate(lastTranslate[0]);
         }
@@ -134,9 +134,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
       velocityX[1] *= VELOCITY;
 
-      if (Math.abs(velocityX[1]) > 0.5) {
-        idOfInertia = requestAnimationFrame(inertia);
-      }
+      if (Math.abs(velocityX[1]) > 0.5) idOfInertia = requestAnimationFrame(inertia);
     }
 
     /* (2) */ updateSize();
