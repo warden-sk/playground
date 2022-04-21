@@ -22,34 +22,24 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
   const parentElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const X = true;
-    const Y = false;
-    const height = parentElement.current!.scrollHeight - parentElement.current!.clientHeight;
     let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
 
-    const position: [x: number, y: number] = [0, 0];
     let isDown = false;
+    let positionX = 0;
     let start: [x: number, y: number] = [0, 0];
     let startTime: number = +new Date();
 
-    function setTranslate(x: number, y: number) {
-      const translate = new Translate(childElement.current!);
-
+    function setTranslate(x: number) {
       if (x) {
+        const translate = new Translate(childElement.current!);
+
         x = x < 0 ? x : 0;
         x = x > width * -1 ? x : width * -1;
 
-        translate.write(x, translate.read()[1]);
+        translate.write(x, 0);
+
+        update();
       }
-
-      if (y) {
-        y = y < 0 ? y : 0;
-        y = y > height * -1 ? y : height * -1;
-
-        translate.write(translate.read()[0], y);
-      }
-
-      update();
     }
 
     function update() {
@@ -88,36 +78,18 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
     ['mousemove', 'touchmove'].forEach(type =>
       parentElement.current!.addEventListener(type, event => {
-        if (!isDown) return;
-
-        const lastTranslate: [x: number, y: number] = [0, 0];
-
-        if (X) {
-          event.preventDefault();
+        if (isDown) {
+          const lastTranslate: [x: number] = [0];
 
           const [x] = readMouseOffset(event);
 
           // left-to-right
-          if (x > start[0]) lastTranslate[0] = position[0] + x - start[0];
+          if (x > start[0]) lastTranslate[0] = positionX + x - start[0];
 
           // right-to-left
-          if (x < start[0]) lastTranslate[0] = position[0] - start[0] + x;
+          if (x < start[0]) lastTranslate[0] = positionX - start[0] + x;
 
-          setTranslate(lastTranslate[0], lastTranslate[1]);
-        }
-
-        if (Y) {
-          event.preventDefault();
-
-          const [, y] = readMouseOffset(event);
-
-          // top-to-bottom
-          if (y > start[1]) lastTranslate[1] = position[1] + y - start[1];
-
-          // bottom-to-top
-          if (y < start[1]) lastTranslate[1] = position[1] - start[1] + y;
-
-          setTranslate(lastTranslate[0], lastTranslate[1]);
+          setTranslate(lastTranslate[0]);
         }
       })
     );
@@ -126,17 +98,12 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       parentElement.current!.addEventListener(type, () => {
         isDown = false;
 
-        const translate = new Translate(childElement.current!).read();
+        const [translateX] = new Translate(childElement.current!).read();
 
         // X
-        velocityX[1] = translate[0] - position[0];
+        velocityX[1] = translateX - positionX;
         velocityX[0] = velocityX[1];
-        position[0] = translate[0];
-
-        // Y
-        velocityY[1] = translate[1] - position[1];
-        velocityY[0] = velocityY[1];
-        position[1] = translate[1];
+        positionX = translateX;
 
         const endTime = +new Date();
 
@@ -145,17 +112,15 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     );
 
     const velocityX: [number, number] = [0, 0];
-    const velocityY: [number, number] = [0, 0];
 
     let idOfInertia: number;
 
     function endInertia() {
       cancelAnimationFrame(idOfInertia);
 
-      const translate = new Translate(childElement.current!).read();
+      const [translateX] = new Translate(childElement.current!).read();
 
-      position[0] = translate[0];
-      position[1] = translate[1];
+      positionX = translateX;
     }
 
     function startInertia() {
@@ -163,15 +128,13 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     }
 
     function inertia() {
-      const x = position[0] + (velocityX[0] - velocityX[1]);
-      const y = position[1] + (velocityY[0] - velocityY[1]);
+      const x = positionX + (velocityX[0] - velocityX[1]);
 
-      setTranslate(x, y);
+      setTranslate(x);
 
       velocityX[1] *= VELOCITY;
-      velocityY[1] *= VELOCITY;
 
-      if (Math.abs(velocityX[1]) > 0.5 || Math.abs(velocityY[1]) > 0.5) {
+      if (Math.abs(velocityX[1]) > 0.5) {
         idOfInertia = requestAnimationFrame(inertia);
       }
     }
