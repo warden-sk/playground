@@ -60,12 +60,10 @@ function B() {
 
 function Client() {
   return (
-    <React.StrictMode>
-      <div className="container" mX="auto" pX="4">
-        <A />
-        <B />
-      </div>
-    </React.StrictMode>
+    <div className="container" mX="auto" pX="4">
+      <A />
+      <B />
+    </div>
   );
 }
 

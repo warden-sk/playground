@@ -23,7 +23,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
   useEffect(() => {
     const X = true;
-    const Y = true;
+    const Y = false;
     const height = parentElement.current!.scrollHeight - parentElement.current!.clientHeight;
     let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
 
@@ -90,32 +90,35 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       parentElement.current!.addEventListener(type, event => {
         if (!isDown) return;
 
-        event.preventDefault();
-
-        let lastTranslateX = 0;
-        let lastTranslateY = 0;
+        const lastTranslate: [x: number, y: number] = [0, 0];
 
         if (X) {
+          event.preventDefault();
+
           const [x] = readMouseOffset(event);
 
           // left-to-right
-          if (x > start[0]) lastTranslateX = position[0] + x - start[0];
+          if (x > start[0]) lastTranslate[0] = position[0] + x - start[0];
 
           // right-to-left
-          if (x < start[0]) lastTranslateX = position[0] - start[0] + x;
+          if (x < start[0]) lastTranslate[0] = position[0] - start[0] + x;
+
+          setTranslate(lastTranslate[0], lastTranslate[1]);
         }
 
         if (Y) {
+          event.preventDefault();
+
           const [, y] = readMouseOffset(event);
 
           // top-to-bottom
-          if (y > start[1]) lastTranslateY = position[1] + y - start[1];
+          if (y > start[1]) lastTranslate[1] = position[1] + y - start[1];
 
           // bottom-to-top
-          if (y < start[1]) lastTranslateY = position[1] - start[1] + y;
-        }
+          if (y < start[1]) lastTranslate[1] = position[1] - start[1] + y;
 
-        setTranslate(lastTranslateX, lastTranslateY);
+          setTranslate(lastTranslate[0], lastTranslate[1]);
+        }
       })
     );
 
@@ -173,12 +176,12 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       }
     }
 
-    /* (1) */ update();
     /* (2) */ updateSize();
+    /* (1) */ update();
 
     window.addEventListener('resize', () => {
-      /* (1) */ update();
       /* (2) */ updateSize();
+      /* (1) */ update();
     });
   }, [children]);
 
