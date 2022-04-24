@@ -81,6 +81,8 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
     ['mousemove', 'touchmove'].forEach(type =>
       parentElement.current!.addEventListener(type, event => {
         if (isDown) {
+          event.preventDefault();
+
           const lastTranslate: [x: number] = [0];
 
           const [x] = readMouseOffset(event);
