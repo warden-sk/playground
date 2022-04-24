@@ -76,7 +76,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
       })
     );
 
-    parent.addEventListener('mouseleave', () => (isDown = false));
+    parentElement.current!.addEventListener('mouseleave', () => (isDown = false));
 
     ['mousemove', 'touchmove'].forEach(type =>
       parentElement.current!.addEventListener(type, event => {
