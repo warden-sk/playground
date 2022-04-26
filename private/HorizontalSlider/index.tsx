@@ -111,7 +111,9 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
         const endTime = +new Date();
 
-        if (endTime - startTime < 375) startInertia();
+        if (endTime - startTime < 375) {
+          startInertia();
+        }
       })
     );
 
@@ -138,16 +140,23 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
 
       velocityX[1] *= VELOCITY;
 
-      if (Math.abs(velocityX[1]) > 0.5) idOfInertia = requestAnimationFrame(inertia);
+      if (Math.abs(velocityX[1]) > 0.5) {
+        idOfInertia = requestAnimationFrame(inertia);
+      }
     }
 
-    /* (2) */ updateSize();
-    /* (1) */ update();
-
-    window.addEventListener('resize', () => {
+    function $() {
       /* (2) */ updateSize();
       /* (1) */ update();
-    });
+    }
+
+    $();
+
+    window.addEventListener('resize', $);
+
+    return () => {
+      window.removeEventListener('resize', $);
+    };
   }, [children]);
 
   return (
