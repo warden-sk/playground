@@ -6,8 +6,8 @@ import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import Translate from '../HorizontalNumberSlider/Translate';
-import readMouseOffset from '../HorizontalNumberSlider/readMouseOffset';
+import Translate from '../helpers/Translate';
+import readMouseOffset from '../helpers/readMouseOffset';
 
 interface P {
   SIZE?: number;

@@ -30,7 +30,7 @@ function A() {
           {hasRight ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
         </div>
       </h1>
-      <HorizontalNumberSlider hasRight={hasRight} on={updatePrice} size={[25, 100]} />
+      <HorizontalNumberSlider hasRightSlider={hasRight} onMove={updatePrice} size={[25, 100]} />
     </div>
   );
 }
