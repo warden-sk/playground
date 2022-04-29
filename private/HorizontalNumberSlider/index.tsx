@@ -81,7 +81,6 @@ function HorizontalNumberSlider({
 
   React.useEffect(() => {
     onMove?.(size);
-    onUp?.(size);
   }, []);
 
   React.useEffect(() => {
