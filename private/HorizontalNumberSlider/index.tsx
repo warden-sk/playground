@@ -146,14 +146,16 @@ function HorizontalNumberSlider({
 
     /* (3) */
     function onMouseUp() {
-      const updatedStorage = {
-        ...storage,
-        [currentDirection()]: { ...storage[currentDirection()], isMouseDown: false },
-      };
+      const direction = currentDirection();
 
-      updateStorage(updatedStorage);
+      if (storage[direction].isMouseDown) {
+        const updatedStorage = {
+          ...storage,
+          [direction]: { ...storage[direction], isMouseDown: false },
+        };
 
-      onUp?.([updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]]);
+        updateStorage(updatedStorage);
+      }
     }
 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
@@ -165,11 +167,17 @@ function HorizontalNumberSlider({
     };
   }, [storage]);
 
+  function onMouseUp() {
+    onUp?.([storage.left.calculated[1], storage.right.calculated[1]]);
+  }
+
   return (
     <div {...attributes} className={[className, 'horizontal-number-slider']} ref={elementStorage.parent}>
       <div
         className="horizontal-number-slider__left"
         onMouseDown={onMouseDown('left')}
+        onMouseUp={onMouseUp}
+        onTouchEnd={onMouseUp}
         onTouchStart={onMouseDown('left')}
         ref={elementStorage.left}
       />
@@ -177,6 +185,8 @@ function HorizontalNumberSlider({
         <div
           className="horizontal-number-slider__right"
           onMouseDown={onMouseDown('right')}
+          onMouseUp={onMouseUp}
+          onTouchEnd={onMouseUp}
           onTouchStart={onMouseDown('right')}
           ref={elementStorage.right}
         />
