@@ -10,11 +10,12 @@ import readElementOffset from '../helpers/readElementOffset';
 import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
 
-interface P {
+interface P extends B<JSX.IntrinsicElements['div']> {
   hasRightSlider?: boolean;
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
+  value?: [left: number, right: number];
 }
 
 interface Storage {
@@ -28,22 +29,15 @@ interface StorageElement {
   x: number;
 }
 
-function HorizontalNumberSlider({
-  className,
-  hasRightSlider,
-  onMove,
-  onUp,
-  size,
-  ...attributes
-}: B<JSX.IntrinsicElements['div']> & P) {
+function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size, value, ...attributes }: P) {
   const [storage, updateStorage] = React.useState<Storage>({
     left: {
-      calculated: [0, size[0]],
+      calculated: [0, 0],
       isMouseDown: false,
       x: 0,
     },
     right: {
-      calculated: [0, size[1]],
+      calculated: [0, 0],
       isMouseDown: false,
       x: 0,
     },
@@ -110,24 +104,26 @@ function HorizontalNumberSlider({
     return updatedStorage;
   }
 
+  /**
+   * od 25 do 100 je pohyblivá časť
+   * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je vstup
+   */
+  function test(input: number): number {
+    const L = input - size[0]; //    62.5 - 25 = 37.5
+
+    const R = size[1] - size[0]; //  100  - 25 = 75
+
+    const LR = L / R; //             37.5 / 75 = 0.5 (50%)
+
+    return LR * availableWidth();
+  }
+
   React.useEffect(() => {
-    const _1 = 62.5;
-
-    const L = _1 - size[0]; // 37.5
-
-    const R = size[1] - size[0]; // 75
-
-    const _2 = L / R;
-
-    const _3 = _2 * availableWidth();
-
-    moveTo('left', _3);
+    value?.[0] && moveTo('left', test(value[0]));
   }, []);
 
   React.useEffect(() => {
-    if (hasRightSlider) {
-      translate('right').write(storage.right.calculated[0] === 0 ? availableWidth() : storage.right.calculated[0], 0);
-    }
+    hasRightSlider && value?.[1] && moveTo('right', test(value[1]));
   }, [hasRightSlider]);
 
   React.useEffect(() => {

@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 function A() {
-  const [hasRight, updateHasRight] = React.useState<boolean>(false);
+  const [hasRightSlider, updateHasRightSlider] = React.useState<boolean>(false);
   const [price, updatePrice] = React.useState<[number, number]>([0, 0]);
 
   return (
@@ -18,19 +18,24 @@ function A() {
       <h1 alignItems="baseline" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
         HorizontalNumberSlider
         <div
-          className={['variable', { variable_active: hasRight }]}
+          className={['variable', { variable_active: hasRightSlider }]}
           fontSize="1"
           mX="4"
-          onClick={() => updateHasRight(!hasRight)}
+          onClick={() => updateHasRightSlider(!hasRightSlider)}
           pX="2"
         >
           hasRight
         </div>
         <div fontSize="2" mL="auto">
-          {hasRight ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
+          {hasRightSlider ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
         </div>
       </h1>
-      <HorizontalNumberSlider hasRightSlider={hasRight} onMove={updatePrice} size={[25, 100]} />
+      <HorizontalNumberSlider
+        hasRightSlider={hasRightSlider}
+        onMove={updatePrice}
+        size={[25, 100]}
+        value={[62.5, 81.25]}
+      />
     </div>
   );
 }
