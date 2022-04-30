@@ -18,7 +18,7 @@ class Translate {
   }
 
   write(x: number, y: number): string {
-    return (this.#element.style.transform = `translate(${x}px, ${y}px)`);
+    return (this.#element.style.transform = `translate(${x}px,${y}px)`);
   }
 }
 

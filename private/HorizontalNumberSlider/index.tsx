@@ -31,16 +31,8 @@ interface StorageElement {
 
 function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size, value, ...attributes }: P) {
   const [storage, updateStorage] = React.useState<Storage>({
-    left: {
-      calculated: [0, 0],
-      isMouseDown: false,
-      x: 0,
-    },
-    right: {
-      calculated: [0, 0],
-      isMouseDown: false,
-      x: 0,
-    },
+    left: { calculated: [0, 0], isMouseDown: false, x: 0 },
+    right: { calculated: [0, 0], isMouseDown: false, x: 0 },
   });
 
   const elementStorage = {
@@ -94,10 +86,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   }
 
   function updateStorageElement($: Partial<StorageElement>, which: 'left' | 'right'): Storage {
-    const updatedStorage = {
-      ...storage,
-      [which]: { ...storage[which], ...$ },
-    };
+    const updatedStorage = { ...storage, [which]: { ...storage[which], ...$ } };
 
     updateStorage(updatedStorage);
 

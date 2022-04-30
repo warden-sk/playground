@@ -3,9 +3,9 @@
  */
 
 function readElementWidth(element: HTMLElement): number {
-  const rectangle = element.getBoundingClientRect();
+  const { width } = element.getBoundingClientRect();
 
-  return rectangle.width;
+  return width;
 }
 
 export default readElementWidth;

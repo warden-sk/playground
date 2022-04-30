@@ -3,9 +3,9 @@
  */
 
 function readElementOffset(element: HTMLElement): [x: number, y: number] {
-  const rectangle = element.getBoundingClientRect();
+  const { x, y } = element.getBoundingClientRect();
 
-  return [rectangle.x, rectangle.y];
+  return [x, y];
 }
 
 export default readElementOffset;
