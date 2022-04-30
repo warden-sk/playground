@@ -1,20 +1,19 @@
 .horizontal-number-slider {
   --left\(background-color\): #fff;
-  --left\(height\): 1.5rem;
-  --left\(width\): var(--left\(height\));
+  --left\(size\): 1.5rem;
 
   --line\(color\): currentColor;
   --line\(height\): 0.125rem;
 
   --right\(background-color\): var(--left\(background-color\));
 
-  height: var(--left\(height\));
+  height: var(--left\(size\));
   position: relative;
 }
 .horizontal-number-slider::after {
   background-color: var(--line\(color\));
   border-radius: calc(var(--line\(height\)) / 2);
-  content: '';
+  content: "";
   height: var(--line\(height\));
   opacity: 0.5;
   position: absolute;
@@ -26,12 +25,12 @@
 .horizontal-number-slider__left,
 .horizontal-number-slider__right {
   background-color: var(--left\(background-color\));
-  border: var(--line\(height\)) solid currentColor;
+  border: var(--line\(height\)) solid var(--line\(color\));
   border-radius: 50%;
   cursor: pointer;
-  height: var(--left\(height\));
+  height: var(--left\(size\));
   position: absolute;
-  width: var(--left\(width\));
+  width: var(--left\(size\));
   z-index: 1;
 }
 /* (2) background-color */

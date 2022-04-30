@@ -48,11 +48,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   function calculate(which: 'left' | 'right'): [left: number, right: number] {
     const [translateX] = translate(which).read();
 
-    /* (1/2) */ let calculated: number = (translateX / availableWidth()) * 100;
-
-    /* (2/2) */ calculated = size[0] + (calculated / 100) * (size[1] - size[0]);
-
-    const updatedStorage = updateStorageElement({ calculated: [translateX, +calculated.toFixed()] }, which);
+    const updatedStorage = updateStorageElement({ calculated: [translateX, $$(translateX)] }, which);
 
     return [updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]];
   }
@@ -85,7 +81,10 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     return new Translate(elementStorage[which].current!);
   }
 
-  function updateStorageElement($: Partial<StorageElement>, which: 'left' | 'right'): Storage {
+  function updateStorageElement(
+    $: { [P in keyof StorageElement]?: StorageElement[P] },
+    which: 'left' | 'right'
+  ): Storage {
     const updatedStorage = { ...storage, [which]: { ...storage[which], ...$ } };
 
     updateStorage(updatedStorage);
@@ -95,10 +94,10 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
   /**
    * od 25 do 100 je pohyblivá časť
-   * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je vstup
+   * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je "x"
    */
-  function test(input: number): number {
-    const L = input - size[0]; //    62.5 - 25 = 37.5
+  function $(x: number): number {
+    const L = x - size[0]; //        62.5 - 25 = 37.5
 
     const R = size[1] - size[0]; //  100  - 25 = 75
 
@@ -107,12 +106,22 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     return LR * availableWidth(); // 50% zo šírky
   }
 
+  /**
+   * 1000 je pohyblivá časť
+   * 500 je "x"
+   */
+  function $$(x: number): number {
+    const _1 = x / availableWidth(); //           500 / 1000 = 0.5 (50%)
+
+    return size[0] + _1 * (size[1] - size[0]); // 25 + 0.5 * (100 - 25) = 62.5
+  }
+
   React.useEffect(() => {
-    value?.[0] && moveTo('left', test(value[0]));
+    value?.[0] && moveTo('left', $(value[0]));
   }, []);
 
   React.useEffect(() => {
-    hasRightSlider && value?.[1] && moveTo('right', test(value[1]));
+    hasRightSlider && value?.[1] && moveTo('right', $(value[1]));
   }, [hasRightSlider]);
 
   React.useEffect(() => {
