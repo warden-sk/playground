@@ -104,7 +104,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
     const LR = L / R; //             37.5 / 75 = 0.5 (50%)
 
-    return LR * availableWidth();
+    return LR * availableWidth(); // 50% zo šírky
   }
 
   React.useEffect(() => {
