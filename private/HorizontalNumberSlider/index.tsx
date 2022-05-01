@@ -60,7 +60,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     // <
     x = x < availableWidth() ? x : availableWidth();
 
-    /* (1) */ translate(which).write(x, 0);
+    /* (1) */ translate(which).write(x);
 
     /* (2) */ const calculated = calculate(which);
 
@@ -92,28 +92,33 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     return updatedStorage;
   }
 
+  function whichIsDown(): 'left' | 'right' {
+    return storage.left.isMouseDown ? 'left' : storage.right.isMouseDown ? 'right' : 'left';
+  }
+
   /**
    * od 25 do 100 je pohyblivá časť
    * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je "x"
    */
   function $(x: number): number {
-    const L = x - size[0]; //        62.5 - 25 = 37.5
+    const _1 = x - size[0]; //       62.5 - 25 = 37.5
 
-    const R = size[1] - size[0]; //  100  - 25 = 75
+    const _2 = size[1] - size[0]; // 100  - 25 = 75
 
-    const LR = L / R; //             37.5 / 75 = 0.5 (50%)
+    const _3 = _1 / _2; //           37.5 / 75 = 0.5 (50%)
 
-    return LR * availableWidth(); // 50% zo šírky
+    return _3 * availableWidth(); // 0.5 * 1000 (šírka) = 500
   }
 
   /**
-   * 1000 je pohyblivá časť
-   * 500 je "x"
+   * "x" je 500
    */
   function $$(x: number): number {
-    const _1 = x / availableWidth(); //           500 / 1000 = 0.5 (50%)
+    const _1 = x / availableWidth(); //               500 / 1000 (šírka) = 0.5 (50%)
 
-    return size[0] + _1 * (size[1] - size[0]); // 25 + 0.5 * (100 - 25) = 62.5
+    const _2 = size[0] + _1 * (size[1] - size[0]); // 25 + 0.5 * (100 - 25) = 62.5
+
+    return +_2.toFixed();
   }
 
   React.useEffect(() => {
@@ -125,12 +130,6 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   }, [hasRightSlider]);
 
   React.useEffect(() => {
-    /* (1) */
-    function whichIsDown(): 'left' | 'right' {
-      return storage.left.isMouseDown ? 'left' : storage.right.isMouseDown ? 'right' : 'left';
-    }
-
-    /* (2) */
     function onMouseMove(event: MouseEvent | TouchEvent) {
       const which = whichIsDown();
 
@@ -138,13 +137,10 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
         const [mouseOffsetX] = readMouseOffset(event);
         const [parentElementOffsetX] = readElementOffset(elementStorage.parent.current!);
 
-        const translateX: number = mouseOffsetX - parentElementOffsetX - storage[which].x;
-
-        moveTo(which, translateX);
+        moveTo(which, mouseOffsetX - parentElementOffsetX - storage[which].x);
       }
     }
 
-    /* (3) */
     function onMouseUp() {
       const which = whichIsDown();
 

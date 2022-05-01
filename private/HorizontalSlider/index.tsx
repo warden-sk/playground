@@ -36,7 +36,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
         x = x < 0 ? x : 0;
         x = x > width * -1 ? x : width * -1;
 
-        translate.write(x, 0);
+        translate.write(x);
 
         update();
       }

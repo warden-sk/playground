@@ -17,7 +17,7 @@ class Translate {
     return [matrix.m41, matrix.m42];
   }
 
-  write(x: number, y: number): string {
+  write(x: number, y = 0): string {
     return (this.#element.style.transform = `translate(${x}px,${y}px)`);
   }
 }
