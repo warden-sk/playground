@@ -21,6 +21,7 @@ interface P extends B<JSX.IntrinsicElements['div']> {
 interface Storage {
   left: StorageElement;
   right: StorageElement;
+  size: [from: number, to: number];
 }
 
 interface StorageElement {
@@ -33,6 +34,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   const [storage, updateStorage] = React.useState<Storage>({
     left: { calculated: [0, 0], isMouseDown: false, x: 0 },
     right: { calculated: [0, 0], isMouseDown: false, x: 0 },
+    size,
   });
 
   const elementStorage = {
@@ -45,15 +47,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     return readElementWidth(elementStorage.parent.current!) - readElementWidth(elementStorage.left.current!);
   }
 
-  function calculate(which: 'left' | 'right'): [left: number, right: number] {
-    const [translateX] = translate(which).read();
-
-    const updatedStorage = updateStorageElement({ calculated: [translateX / availableWidth(), $$(translateX)] }, which);
-
-    return [updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]];
-  }
-
-  function moveTo(which: 'left' | 'right', x: number) {
+  async function moveTo(which: 'left' | 'right', x: number) {
     // >
     x = x > 0 ? x : 0;
 
@@ -62,9 +56,9 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
     /* (1) */ translate(which).write(x);
 
-    /* (2) */ const calculated = calculate(which);
+    /* (2) */ const updatedStorage = await updateStorageElement({ calculated: [x / availableWidth(), $$(x)] }, which);
 
-    /* (3) */ onMove?.(calculated);
+    /* (3) */ onMove?.([updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]]);
   }
 
   function onMouseDown(which: 'left' | 'right') {
@@ -81,15 +75,19 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     return new Translate(elementStorage[which].current!);
   }
 
-  function updateStorageElement(
+  async function updateStorageElement(
     storageElement: { [P in keyof StorageElement]?: StorageElement[P] },
     which: 'left' | 'right'
-  ): Storage {
-    const updatedStorage = { ...storage, [which]: { ...storage[which], ...storageElement } };
+  ): Promise<Storage> {
+    return new Promise(l =>
+      updateStorage(storage => {
+        const updatedStorage = { ...storage, [which]: { ...storage[which], ...storageElement } };
 
-    updateStorage(updatedStorage);
+        l(updatedStorage);
 
-    return updatedStorage;
+        return updatedStorage;
+      })
+    );
   }
 
   function whichIsDown(): 'left' | 'right' {
@@ -102,11 +100,11 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   function $(x: number): number {
     // (x / (size[0] + size[1])) * availableWidth();
 
-    const _1 = x - size[0]; //       81.25 - 25 = 56.25
+    const _1 = x - storage.size[0]; //               81.25 - 25 = 56.25
 
-    const _2 = size[1] - size[0]; // 100   - 25 = 75
+    const _2 = storage.size[1] - storage.size[0]; // 100   - 25 = 75
 
-    const _3 = _1 / _2; //           56.25 / 75 = 0.75
+    const _3 = _1 / _2; //                           56.25 / 75 = 0.75
 
     return _3 * availableWidth();
   }
@@ -114,16 +112,17 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
    * (2)
    */
   function $$(x: number): number {
-    return +(size[0] + (x / availableWidth()) * (size[1] - size[0])).toFixed();
+    return +(storage.size[0] + (x / availableWidth()) * (storage.size[1] - storage.size[0])).toFixed();
   }
 
   React.useEffect(() => {
-    value?.[0] && moveTo('left', $(value[0]));
-  }, []);
+    storage.right.calculated[1] && moveTo('right', $(storage.right.calculated[1]));
+  }, [hasRightSlider]);
 
   React.useEffect(() => {
-    hasRightSlider && value?.[1] && moveTo('right', $(value[1]));
-  }, [hasRightSlider]);
+    moveTo('left', $(value?.[0] ?? storage.size[0]));
+    hasRightSlider && moveTo('right', $(value?.[1] ?? storage.size[1]));
+  }, [value]);
 
   React.useEffect(() => {
     function onMouseMove(event: MouseEvent | TouchEvent) {
@@ -137,11 +136,11 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
       }
     }
 
-    function onMouseUp() {
+    async function onMouseUp() {
       const which = whichIsDown();
 
       if (storage[which].isMouseDown) {
-        const updatedStorage = updateStorageElement({ isMouseDown: false }, which);
+        const updatedStorage = await updateStorageElement({ isMouseDown: false }, which);
 
         onUp?.([updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]]);
       }

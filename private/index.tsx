@@ -4,38 +4,49 @@
 
 import './index.css';
 
+import { ChevronLeft } from '@warden-sk/icons';
 import HorizontalNumberSlider from './HorizontalNumberSlider';
 import HorizontalSlider from './HorizontalSlider';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 function A() {
-  const [hasRightSlider, updateHasRightSlider] = React.useState<boolean>(false);
+  const [hasRightSlider, updateHasRightSlider] = React.useState<boolean>(true);
   const [price, updatePrice] = React.useState<[number, number]>([0, 0]);
+  const [value, updateValue] = React.useState<[number, number]>([43.75, 81.25]);
 
   return (
     <div mY="8">
-      <h1 alignItems="baseline" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
+      <h1 alignItems="center" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
         HorizontalNumberSlider
-        <div
-          className={['variable', { variable_active: hasRightSlider }]}
-          fontSize="1"
-          mX="4"
-          onClick={() => updateHasRightSlider(!hasRightSlider)}
-          pX="2"
-        >
-          hasRight
+        <div display="flex">
+          <div
+            className={['variable', { variable_active: hasRightSlider }]}
+            fontSize="1"
+            mX="2"
+            mY="auto"
+            onClick={() => updateHasRightSlider(!hasRightSlider)}
+            pX="2"
+          >
+            hasRightSlider
+          </div>
+          <div
+            alignItems="center"
+            className="variable"
+            display="flex"
+            fontSize="1"
+            mX="2"
+            onClick={() => updateValue([0, 0])}
+            pX="2"
+          >
+            <ChevronLeft />
+          </div>
         </div>
         <div fontSize="2" mL="auto">
           {hasRightSlider ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
         </div>
       </h1>
-      <HorizontalNumberSlider
-        hasRightSlider={hasRightSlider}
-        onMove={updatePrice}
-        size={[25, 100]}
-        value={[43.75, 81.25]}
-      />
+      <HorizontalNumberSlider hasRightSlider={hasRightSlider} onMove={updatePrice} size={[25, 100]} value={value} />
     </div>
   );
 }
