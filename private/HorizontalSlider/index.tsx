@@ -162,7 +162,7 @@ function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<
   return (
     <div className="t">
       {isLeft && <ChevronLeft className="t-chevron-left" size={SIZE} />}
-      <div ref={parentElement} style={{ overflow: 'hidden' }}>
+      <div onDragStart={e => e.preventDefault()} ref={parentElement} style={{ overflow: 'hidden' }}>
         <div {...attributes} ref={childElement}>
           {children}
         </div>
