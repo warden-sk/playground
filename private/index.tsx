@@ -4,16 +4,17 @@
 
 import './index.css';
 
+import React, { useState } from 'react';
+import Calendar from './Calendar';
 import { ChevronLeft } from '@warden-sk/icons';
 import HorizontalNumberSlider from './HorizontalNumberSlider';
 import HorizontalSlider from './HorizontalSlider';
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 function A() {
-  const [hasRightSlider, updateHasRightSlider] = React.useState<boolean>(true);
-  const [price, updatePrice] = React.useState<[number, number]>([0, 0]);
-  const [value, updateValue] = React.useState<[number, number]>([43.75, 81.25]);
+  const [hasRightSlider, updateHasRightSlider] = useState<boolean>(true);
+  const [price, updatePrice] = useState<[number, number]>([0, 0]);
+  const [value, updateValue] = useState<[number, number]>([43.75, 81.25]);
 
   return (
     <div mY="8">
@@ -74,11 +75,25 @@ function B() {
   );
 }
 
+function C() {
+  const [date, updateDate] = useState<number>(+new Date());
+
+  return (
+    <div mY="8">
+      <h1 fontSize="4" mB="4">
+        Calendar
+      </h1>
+      <Calendar date={date} updateDate={updateDate} />
+    </div>
+  );
+}
+
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
       <A />
       <B />
+      <C />
     </div>
   );
 }
