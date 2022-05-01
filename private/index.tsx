@@ -34,7 +34,7 @@ function A() {
         hasRightSlider={hasRightSlider}
         onMove={updatePrice}
         size={[25, 100]}
-        value={[62.5, 81.25]}
+        value={[43.75, 81.25]}
       />
     </div>
   );
