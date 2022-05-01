@@ -82,10 +82,10 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   }
 
   function updateStorageElement(
-    $: { [P in keyof StorageElement]?: StorageElement[P] },
+    storageElement: { [P in keyof StorageElement]?: StorageElement[P] },
     which: 'left' | 'right'
   ): Storage {
-    const updatedStorage = { ...storage, [which]: { ...storage[which], ...$ } };
+    const updatedStorage = { ...storage, [which]: { ...storage[which], ...storageElement } };
 
     updateStorage(updatedStorage);
 
@@ -98,15 +98,15 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
   /**
    * (1)
-   * od 25 do 100 je pohyblivá časť
-   * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je "x"
    */
   function $(x: number): number {
-    const _1 = x - size[0]; //       62.5 - 25 = 37.5
+    // (x / (size[0] + size[1])) * availableWidth();
 
-    const _2 = size[1] - size[0]; // 100  - 25 = 75
+    const _1 = x - size[0]; //       81.25 - 25 = 56.25
 
-    const _3 = _1 / _2; //           37.5 / 75 = 0.5
+    const _2 = size[1] - size[0]; // 100   - 25 = 75
+
+    const _3 = _1 / _2; //           56.25 / 75 = 0.75
 
     return _3 * availableWidth();
   }
@@ -114,11 +114,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
    * (2)
    */
   function $$(x: number): number {
-    const _1 = x / availableWidth();
-
-    const _2 = size[0] + _1 * (size[1] - size[0]); // 25 + 0.5 * (100 - 25) = 62.5
-
-    return +_2.toFixed();
+    return +(size[0] + (x / availableWidth()) * (size[1] - size[0])).toFixed();
   }
 
   React.useEffect(() => {
