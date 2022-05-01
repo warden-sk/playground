@@ -15,7 +15,11 @@
 .calendar > div:nth-child(n + 2):nth-child(-n + 8) {
   color: var(--calendar__day_current\(background-color\));
 }
-.calendar__day:not(.calendar__day_current) {
+.calendar__day {
+  padding-bottom: 100%;
+  position: relative;
+}
+.calendar__day:not(.calendar__day_current):not(.calendar__day_test) {
   cursor: pointer;
 }
 .calendar__day_current {
@@ -23,11 +27,9 @@
   border-radius: 50%;
   color: var(--calendar__day_current\(color\));
 }
-.calendar__header {
-  cursor: pointer;
-}
-.calendar__test {
-  background-color: transparent;
+.calendar__day_test {
   color: hsl(0, 0%, 50%);
+}
+.calendar__header {
   cursor: pointer;
 }

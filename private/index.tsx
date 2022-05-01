@@ -83,7 +83,9 @@ function C() {
       <h1 fontSize="4" mB="4">
         Calendar
       </h1>
-      <Calendar date={date} updateDate={updateDate} />
+      <div mX="auto" width={['100', { '##': '6/12' }]}>
+        <Calendar date={date} updateDate={updateDate} />
+      </div>
     </div>
   );
 }

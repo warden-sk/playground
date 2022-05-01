@@ -36,22 +36,14 @@ class EnhancedDate extends Date {
   to(format: string): string {
     const day: string = EnhancedDate.DAYS[this.getDay()] ?? '';
     const month: string = EnhancedDate.MONTHS[this.getMonth()] ?? '';
-    const vo: string = this.getDay() === 4 ? 'vo' : 'v';
-
-    /vo/.test(format)
-      ? (format = format.replace(
-          'DDDD',
-          day.replace('nedeľa', 'nedeľu').replace('sobota', 'sobotu').replace('streda', 'stredu')
-        ))
-      : (format = format.replace('DDDD', day));
 
     format = format
-      .replace('vo', vo)
       .replace('mm', this.getMinutes().toString().padStart(2, '0'))
       .replace('YYYY', this.getFullYear().toString())
       .replace('MMMM', month)
       .replace('MM', this.getMonth().toString())
       .replace('HH', this.getHours().toString().padStart(2, '0'))
+      .replace('DDDD', day)
       .replace('DD', this.getDate().toString().padStart(2, '0'))
       .replace('D', this.getDate().toString());
 

@@ -4,38 +4,16 @@
 
 import './index.css';
 
+import CalendarDay from './CalendarDay';
 import EnhancedDate from '../helpers/EnhancedDate';
 import React from 'react';
 
-interface P {
+interface P extends B<JSX.IntrinsicElements['div']> {
   date: number;
   updateDate: (date: number) => void;
 }
 
 let lastPageX = 0;
-
-function CalendarDay({ date, i, test, updateDate }: P & { i: number; test?: boolean }) {
-  const enhancedDate = new EnhancedDate(date);
-
-  return (
-    <div
-      className={['calendar__day', { calendar__day_current: i === enhancedDate.getDate(), calendar__test: test }]}
-      style={{ paddingBottom: '100%', position: 'relative' }}
-    >
-      <div
-        alignItems="center"
-        display="flex"
-        justifyContent="center"
-        onClick={() => {
-          updateDate(enhancedDate.setDate(i));
-        }}
-        style={{ height: '100%', position: 'absolute', width: '100%' }}
-      >
-        {i}
-      </div>
-    </div>
-  );
-}
 
 function Calendar({ date, updateDate }: P) {
   const enhancedDate = new EnhancedDate(date);
