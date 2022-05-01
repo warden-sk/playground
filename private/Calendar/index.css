@@ -28,6 +28,7 @@
   color: var(--calendar__day_current\(color\));
 }
 .calendar__day_test {
+  background-color: transparent;
   color: hsl(0, 0%, 50%);
 }
 .calendar__header {
