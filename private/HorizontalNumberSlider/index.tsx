@@ -24,7 +24,7 @@ interface Storage {
 }
 
 interface StorageElement {
-  calculated: [before: number, after: number];
+  calculated: [number, number];
   isMouseDown: boolean;
   x: number;
 }
@@ -48,7 +48,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   function calculate(which: 'left' | 'right'): [left: number, right: number] {
     const [translateX] = translate(which).read();
 
-    const updatedStorage = updateStorageElement({ calculated: [translateX, $$(translateX)] }, which);
+    const updatedStorage = updateStorageElement({ calculated: [translateX / availableWidth(), $$(translateX)] }, which);
 
     return [updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]];
   }
@@ -69,11 +69,11 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
   function onMouseDown(which: 'left' | 'right') {
     return (event: React.MouseEvent | React.TouchEvent) => {
-      const [currentTranslateX] = translate(which).read();
+      const [elementOffsetX] = readElementOffset(elementStorage.parent.current!);
       const [mouseOffsetX] = readMouseOffset(event.nativeEvent);
-      const [parentElementOffsetX] = readElementOffset(elementStorage.parent.current!);
+      const [translateX] = translate(which).read();
 
-      updateStorageElement({ isMouseDown: true, x: mouseOffsetX - parentElementOffsetX - currentTranslateX }, which);
+      updateStorageElement({ isMouseDown: true, x: mouseOffsetX - elementOffsetX - translateX }, which);
     };
   }
 
@@ -97,6 +97,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   }
 
   /**
+   * (1)
    * od 25 do 100 je pohyblivá časť
    * 100 - 25 = 75 / 2 = 37.5 + 25 = 62.5 je "x"
    */
@@ -105,16 +106,15 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
 
     const _2 = size[1] - size[0]; // 100  - 25 = 75
 
-    const _3 = _1 / _2; //           37.5 / 75 = 0.5 (50%)
+    const _3 = _1 / _2; //           37.5 / 75 = 0.5
 
-    return _3 * availableWidth(); // 0.5 * 1000 (šírka) = 500
+    return _3 * availableWidth();
   }
-
   /**
-   * "x" je 500
+   * (2)
    */
   function $$(x: number): number {
-    const _1 = x / availableWidth(); //               500 / 1000 (šírka) = 0.5 (50%)
+    const _1 = x / availableWidth();
 
     const _2 = size[0] + _1 * (size[1] - size[0]); // 25 + 0.5 * (100 - 25) = 62.5
 
@@ -134,10 +134,10 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
       const which = whichIsDown();
 
       if (storage[which].isMouseDown) {
+        const [elementOffsetX] = readElementOffset(elementStorage.parent.current!);
         const [mouseOffsetX] = readMouseOffset(event);
-        const [parentElementOffsetX] = readElementOffset(elementStorage.parent.current!);
 
-        moveTo(which, mouseOffsetX - parentElementOffsetX - storage[which].x);
+        moveTo(which, mouseOffsetX - elementOffsetX - storage[which].x);
       }
     }
 
@@ -151,12 +151,22 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
       }
     }
 
+    function onTest() {
+      moveTo('left', availableWidth() * storage.left.calculated[0]);
+
+      hasRightSlider && moveTo('right', availableWidth() * storage.right.calculated[0]);
+    }
+
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
     (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
+
+    window.addEventListener('resize', onTest);
 
     return () => {
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
+
+      window.removeEventListener('resize', onTest);
     };
   }, [storage]);
 
