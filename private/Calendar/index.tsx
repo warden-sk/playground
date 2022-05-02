@@ -90,7 +90,9 @@ function Calendar({ date, updateDate }: P) {
 
   const AFTER = $(MAX_DAYS - MIN_DAYS); // 6 days after
 
-  const MONTHS: string[] = [
+  const DAYS = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'] as const;
+
+  const MONTHS = [
     'Január',
     'Február',
     'Marec',
@@ -103,12 +105,12 @@ function Calendar({ date, updateDate }: P) {
     'Október',
     'November',
     'December',
-  ];
+  ] as const;
 
   return (
     <div
       className="calendar"
-      display="grid"
+      display="inline-grid"
       fontSize="-1"
       onMouseDown={e => (lastPageX = e.pageX)}
       onMouseUp={e => onUp(e.pageX)}
@@ -118,26 +120,38 @@ function Calendar({ date, updateDate }: P) {
       ref={calendar}
       textAlign="center"
     >
-      <div alignItems="center" display="flex" mB="4" style={{ gridColumn: '1/8' }}>
+      <div alignItems="center" display="flex" mB="2" style={{ gridColumn: '1/8' }}>
         <ChevronLeft onClick={() => moveLeft()} />
         <div mX="auto" onClick={() => updateDate(+new Date())}>
           {MONTHS[enhancedDate.getMonth()]} {enhancedDate.getFullYear()}
         </div>
         <ChevronRight onClick={() => moveRight()} />
       </div>
-      {['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'].map(day => (
-        <div key={day} mB="2">
+      {DAYS.map(day => (
+        <div key={day} p="2">
           {day}
         </div>
       ))}
       {BEFORE.map(i => (
-        <CalendarDay date={+new EnhancedDate(enhancedDate).addMonths(-1)} i={i} key={i} test updateDate={updateDate} />
+        <CalendarDay
+          date={+new EnhancedDate(enhancedDate).addMonths(-1)}
+          i={i}
+          isDifferentMonth
+          key={i}
+          updateDate={updateDate}
+        />
       ))}
       {$(DAYS_IN_CURRENT_MONTH).map(i => (
         <CalendarDay date={+enhancedDate} i={i} key={i} updateDate={updateDate} />
       ))}
       {AFTER.map(i => (
-        <CalendarDay date={+new EnhancedDate(enhancedDate).addMonths(1)} i={i} key={i} test updateDate={updateDate} />
+        <CalendarDay
+          date={+new EnhancedDate(enhancedDate).addMonths(1)}
+          i={i}
+          isDifferentMonth
+          key={i}
+          updateDate={updateDate}
+        />
       ))}
     </div>
   );

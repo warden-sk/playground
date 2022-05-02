@@ -1,0 +1,30 @@
+:root {
+  --calendar__day_is-current\(background-color\): #fff;
+  --calendar__day_is-current\(color\): #000;
+
+  --calendar__day_is-different-month\(color\): hsl(0, 0%, 50%);
+}
+.calendar > :not(.calendar__day) {
+  color: var(--calendar__day_is-current\(background-color\));
+}
+.calendar__day {
+  padding-bottom: 100%;
+  position: relative;
+}
+.calendar__day:not(.calendar__day_is-current):not(.calendar__day_is-different-month) {
+  cursor: pointer;
+}
+.calendar__day_is-current {
+  background-color: var(--calendar__day_is-current\(background-color\));
+  border-radius: 50%;
+  color: var(--calendar__day_is-current\(color\));
+}
+.calendar__day_is-different-month {
+  background-color: transparent;
+  color: var(--calendar__day_is-different-month\(color\));
+}
+.calendar__day__i {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
