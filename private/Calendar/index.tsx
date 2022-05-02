@@ -4,6 +4,7 @@
 
 import './index.css';
 
+import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import CalendarDay from './CalendarDay';
 import EnhancedDate from '../helpers/EnhancedDate';
 import React from 'react';
@@ -18,6 +19,46 @@ let lastPageX = 0;
 function Calendar({ date, updateDate }: P) {
   const enhancedDate = new EnhancedDate(date);
 
+  function move(x: number) {
+    const calendar = document.querySelector('.calendar')!;
+
+    // left
+    if (lastPageX < x) {
+      if (x - lastPageX > calendar.clientWidth / 7) {
+        moveLeft();
+      }
+    }
+
+    // right
+    if (x < lastPageX) {
+      if (lastPageX - x > calendar.clientWidth / 7) {
+        moveRight();
+      }
+    }
+  }
+
+  function moveLeft() {
+    if (enhancedDate.getMonth() === 0) {
+      enhancedDate.setFullYear(enhancedDate.getFullYear() - 1);
+      enhancedDate.setMonth(11);
+    } else {
+      enhancedDate.addMonths(-1);
+    }
+
+    update();
+  }
+
+  function moveRight() {
+    if (enhancedDate.getMonth() === 11) {
+      enhancedDate.setFullYear(enhancedDate.getFullYear() + 1);
+      enhancedDate.setMonth(0);
+    } else {
+      enhancedDate.addMonths(1);
+    }
+
+    update();
+  }
+
   function update() {
     updateDate(
       +new Date(
@@ -28,42 +69,6 @@ function Calendar({ date, updateDate }: P) {
         enhancedDate.getMinutes()
       )
     );
-  }
-
-  function moveLeft() {
-    if (enhancedDate.getMonth() === 0) {
-      enhancedDate.setMonth(11);
-      enhancedDate.setFullYear(enhancedDate.getFullYear() - 1);
-    } else enhancedDate.addMonths(-1);
-
-    update();
-  }
-
-  function moveRight() {
-    if (enhancedDate.getMonth() === 11) {
-      enhancedDate.setMonth(0);
-      enhancedDate.setFullYear(enhancedDate.getFullYear() + 1);
-    } else enhancedDate.addMonths(1);
-
-    update();
-  }
-
-  function move(pageX: number) {
-    const calendar = document.querySelector('.calendar')!;
-
-    // left
-    if (lastPageX < pageX) {
-      if (pageX - lastPageX > calendar.clientWidth / 7) {
-        moveLeft();
-      }
-    }
-
-    // right
-    if (pageX < lastPageX) {
-      if (lastPageX - pageX > calendar.clientWidth / 7) {
-        moveRight();
-      }
-    }
   }
 
   function $(i: number): number[] {
@@ -92,20 +97,18 @@ function Calendar({ date, updateDate }: P) {
       display="grid"
       onMouseDown={e => (lastPageX = e.pageX)}
       onMouseUp={e => move(e.pageX)}
-      onTouchEnd={e => move(e.changedTouches[0].pageX)}
+      onTouchEnd={e => move(e.touches[0].pageX)}
       onTouchStart={e => (lastPageX = e.touches[0].pageX)}
       pX="3"
-      pY="7"
+      pY="6"
       textAlign="center"
     >
-      <div
-        className="calendar__header"
-        fontSize="3"
-        mB="7"
-        onClick={() => updateDate(+new Date())}
-        style={{ gridColumn: '1/8' }}
-      >
-        {enhancedDate.to('DDDD D. MMMM YYYY')}
+      <div alignItems="center" display="flex" fontSize="3" justifyContent="center" mB="6" style={{ gridColumn: '1/8' }}>
+        <ChevronLeft onClick={() => moveLeft()} />
+        <div mX="3" onClick={() => updateDate(+new Date())}>
+          {enhancedDate.to('DDDD D. MMMM YYYY')}
+        </div>
+        <ChevronRight onClick={() => moveRight()} />
       </div>
       {['Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'].map(day => (
         <div key={day} mY="3">

@@ -12,19 +12,27 @@ interface P extends B<JSX.IntrinsicElements['div']> {
   updateDate: (date: number) => void;
 }
 
-function CalendarDay({ date, i, test, updateDate }: P) {
+function CalendarDay({ className, date, i, test, updateDate, ...attributes }: P) {
   const enhancedDate = new EnhancedDate(date);
 
   return (
     <div
-      className={['calendar__day', { calendar__day_current: i === enhancedDate.getDate(), calendar__day_test: test }]}
+      {...attributes}
+      className={[
+        className,
+        'calendar__day',
+        {
+          calendar__day_current: i === enhancedDate.getDate(),
+          calendar__day_test: test,
+        },
+      ]}
     >
       <div
         alignItems="center"
+        className="calendar__day__i"
         display="flex"
         justifyContent="center"
         onClick={() => updateDate(enhancedDate.setDate(i))}
-        style={{ height: '100%', position: 'absolute', width: '100%' }}
       >
         {i}
       </div>

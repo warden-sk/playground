@@ -1,20 +1,22 @@
 :root {
   --calendar\(background-color\): hsl(0, 0%, 25%);
   --calendar\(color\): hsl(0, 0%, 75%);
+
   --calendar__day_current\(background-color\): #fff;
   --calendar__day_current\(color\): #000;
+
+  --calendar__day_test\(color\): hsl(0, 0%, 50%);
 }
 .calendar {
   background-color: var(--calendar\(background-color\));
-  border-radius: 0.5rem;
+  border-radius: var(--border-width);
   color: var(--calendar\(color\));
-  cursor: move;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  user-select: none;
 }
 .calendar > div:nth-child(n + 2):nth-child(-n + 8) {
   color: var(--calendar__day_current\(background-color\));
 }
+/* CalendarDay */
 .calendar__day {
   padding-bottom: 100%;
   position: relative;
@@ -27,10 +29,12 @@
   border-radius: 50%;
   color: var(--calendar__day_current\(color\));
 }
+.calendar__day__i {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
 .calendar__day_test {
   background-color: transparent;
-  color: hsl(0, 0%, 50%);
-}
-.calendar__header {
-  cursor: pointer;
+  color: var(--calendar__day_test\(color\));
 }
