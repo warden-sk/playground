@@ -90,11 +90,26 @@ function Calendar({ date, updateDate }: P) {
 
   const AFTER = $(MAX_DAYS - MIN_DAYS); // 6 days after
 
+  const MONTHS: string[] = [
+    'Január',
+    'Február',
+    'Marec',
+    'Apríl',
+    'Máj',
+    'Jún',
+    'Júl',
+    'August',
+    'September',
+    'Október',
+    'November',
+    'December',
+  ];
+
   return (
     <div
       className="calendar"
       display="grid"
-      fontSize="-2"
+      fontSize="-1"
       onMouseDown={e => (lastPageX = e.pageX)}
       onMouseUp={e => onUp(e.pageX)}
       onTouchEnd={e => onUp(e.touches[0].pageX)}
@@ -106,11 +121,11 @@ function Calendar({ date, updateDate }: P) {
       <div alignItems="center" display="flex" mB="4" style={{ gridColumn: '1/8' }}>
         <ChevronLeft onClick={() => moveLeft()} />
         <div mX="auto" onClick={() => updateDate(+new Date())}>
-          {enhancedDate.to('DDDD D. MMMM YYYY')}
+          {MONTHS[enhancedDate.getMonth()]} {enhancedDate.getFullYear()}
         </div>
         <ChevronRight onClick={() => moveRight()} />
       </div>
-      {['Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'].map(day => (
+      {['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'].map(day => (
         <div key={day} mB="2">
           {day}
         </div>
