@@ -4,37 +4,24 @@
 
 import './index.css';
 
-import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import CalendarDay from './CalendarDay';
+import { ChevronRight } from '@warden-sk/icons';
 import EnhancedDate from '../helpers/EnhancedDate';
 import React from 'react';
+import readElementWidth from '../helpers/readElementWidth';
 
 interface P extends B<JSX.IntrinsicElements['div']> {
   date: number;
   updateDate: (date: number) => void;
 }
 
-let lastPageX = 0;
-
 function Calendar({ date, updateDate }: P) {
+  const calendar = React.useRef<HTMLDivElement>(null);
   const enhancedDate = new EnhancedDate(date);
+  let lastPageX = 0;
 
-  function move(x: number) {
-    const calendar = document.querySelector('.calendar')!;
-
-    // left
-    if (lastPageX < x) {
-      if (x - lastPageX > calendar.clientWidth / 7) {
-        moveLeft();
-      }
-    }
-
-    // right
-    if (x < lastPageX) {
-      if (lastPageX - x > calendar.clientWidth / 7) {
-        moveRight();
-      }
-    }
+  function $(i: number): number[] {
+    return [...new Array(i)].map((...[, j]) => j + 1);
   }
 
   function moveLeft() {
@@ -71,8 +58,20 @@ function Calendar({ date, updateDate }: P) {
     );
   }
 
-  function $(i: number): number[] {
-    return [...new Array(i)].map((...[, j]) => j + 1);
+  function onUp(x: number) {
+    // left
+    if (lastPageX < x) {
+      if (x - lastPageX > readElementWidth(calendar.current!) / 6) {
+        moveLeft();
+      }
+    }
+
+    // right
+    if (x < lastPageX) {
+      if (lastPageX - x > readElementWidth(calendar.current!) / 6) {
+        moveRight();
+      }
+    }
   }
 
   const DAYS_IN_CURRENT_MONTH = enhancedDate.daysInMonth(); // January 2022 has 31 days
@@ -95,23 +94,21 @@ function Calendar({ date, updateDate }: P) {
     <div
       className="calendar"
       display="grid"
+      fontSize="-2"
       onMouseDown={e => (lastPageX = e.pageX)}
-      onMouseUp={e => move(e.pageX)}
-      onTouchEnd={e => move(e.touches[0].pageX)}
+      onMouseUp={e => onUp(e.pageX)}
+      onTouchEnd={e => onUp(e.touches[0].pageX)}
       onTouchStart={e => (lastPageX = e.touches[0].pageX)}
-      pX="3"
-      pY="6"
+      p="4"
+      ref={calendar}
       textAlign="center"
     >
-      <div alignItems="center" display="flex" fontSize="3" justifyContent="center" mB="6" style={{ gridColumn: '1/8' }}>
-        <ChevronLeft onClick={() => moveLeft()} />
-        <div mX="3" onClick={() => updateDate(+new Date())}>
-          {enhancedDate.to('DDDD D. MMMM YYYY')}
-        </div>
+      <div alignItems="center" display="flex" justifyContent="center" mB="2" style={{ gridColumn: '1/8' }}>
+        <div onClick={() => updateDate(+new Date())}>{enhancedDate.to('DDDD D. MMMM YYYY')}</div>
         <ChevronRight onClick={() => moveRight()} />
       </div>
       {['Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'].map(day => (
-        <div key={day} mY="3">
+        <div key={day} mY="2">
           {day}
         </div>
       ))}
