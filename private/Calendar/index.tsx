@@ -4,8 +4,8 @@
 
 import './index.css';
 
+import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import CalendarDay from './CalendarDay';
-import { ChevronRight } from '@warden-sk/icons';
 import EnhancedDate from '../helpers/EnhancedDate';
 import React from 'react';
 import readElementWidth from '../helpers/readElementWidth';
@@ -103,12 +103,15 @@ function Calendar({ date, updateDate }: P) {
       ref={calendar}
       textAlign="center"
     >
-      <div alignItems="center" display="flex" justifyContent="center" mB="2" style={{ gridColumn: '1/8' }}>
-        <div onClick={() => updateDate(+new Date())}>{enhancedDate.to('DDDD D. MMMM YYYY')}</div>
+      <div alignItems="center" display="flex" mB="4" style={{ gridColumn: '1/8' }}>
+        <ChevronLeft onClick={() => moveLeft()} />
+        <div mX="auto" onClick={() => updateDate(+new Date())}>
+          {enhancedDate.to('DDDD D. MMMM YYYY')}
+        </div>
         <ChevronRight onClick={() => moveRight()} />
       </div>
       {['Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'].map(day => (
-        <div key={day} mY="2">
+        <div key={day} mB="2">
           {day}
         </div>
       ))}
