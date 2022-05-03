@@ -15,6 +15,24 @@ class EnhancedDate extends Date {
       0
     ).getDate();
   }
+
+  moveLeft() {
+    if (this.getMonth() === 0) {
+      this.setFullYear(this.getFullYear() - 1);
+      this.setMonth(11);
+    } else {
+      this.addMonths(-1);
+    }
+  }
+
+  moveRight() {
+    if (this.getMonth() === 11) {
+      this.setFullYear(this.getFullYear() + 1);
+      this.setMonth(0);
+    } else {
+      this.addMonths(1);
+    }
+  }
 }
 
 export default EnhancedDate;

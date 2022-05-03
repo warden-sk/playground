@@ -4,19 +4,16 @@
 
 import './CalendarDay.css';
 
-import EnhancedDate from '../helpers/EnhancedDate';
 import React from 'react';
 
 interface P extends B<JSX.IntrinsicElements['div']> {
-  date: number;
+  date: Date;
   i: number;
   isDifferentMonth?: boolean;
   updateDate: (date: number) => void;
 }
 
 function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attributes }: P) {
-  const enhancedDate = new EnhancedDate(date);
-
   return (
     <div
       {...attributes}
@@ -24,7 +21,7 @@ function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attr
         className,
         'calendar__day',
         {
-          'calendar__day_is-current': i === enhancedDate.getDate(),
+          'calendar__day_is-current': i === date.getDate() && !isDifferentMonth,
           'calendar__day_is-different-month': isDifferentMonth,
         },
       ]}
@@ -34,7 +31,7 @@ function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attr
         className="calendar__day__i"
         display="flex"
         justifyContent="center"
-        onClick={() => updateDate(enhancedDate.setDate(i))}
+        onClick={() => updateDate(date.setDate(i))}
       >
         {i}
       </div>

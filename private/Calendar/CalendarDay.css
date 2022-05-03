@@ -8,19 +8,19 @@
   color: var(--calendar__day_is-current\(background-color\));
 }
 .calendar__day {
+  cursor: pointer;
+  font-weight: 400;
   padding-bottom: 100%;
   position: relative;
-}
-.calendar__day:not(.calendar__day_is-current):not(.calendar__day_is-different-month) {
-  cursor: pointer;
 }
 .calendar__day_is-current {
   background-color: var(--calendar__day_is-current\(background-color\));
   border-radius: 50%;
+  box-shadow: 0 0 0.5rem hsla(0, 0%, 0%, 0.25);
   color: var(--calendar__day_is-current\(color\));
+  font-weight: 600;
 }
 .calendar__day_is-different-month {
-  background-color: transparent;
   color: var(--calendar__day_is-different-month\(color\));
 }
 .calendar__day__i {

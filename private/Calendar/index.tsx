@@ -5,9 +5,10 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
+import { DAYS, MONTHS } from './constants';
+import React, { useRef, useState } from 'react';
 import CalendarDay from './CalendarDay';
 import EnhancedDate from '../helpers/EnhancedDate';
-import React from 'react';
 import readElementWidth from '../helpers/readElementWidth';
 
 interface P extends B<JSX.IntrinsicElements['div']> {
@@ -16,32 +17,22 @@ interface P extends B<JSX.IntrinsicElements['div']> {
 }
 
 function Calendar({ date, updateDate }: P) {
-  const calendar = React.useRef<HTMLDivElement>(null);
+  const [downX, updateDownX] = useState<number>(0);
+  const calendar = useRef<HTMLDivElement>(null);
   const enhancedDate = new EnhancedDate(date);
-  let lastPageX = 0;
 
   function $(i: number): number[] {
     return [...new Array(i)].map((...[, j]) => j + 1);
   }
 
   function moveLeft() {
-    if (enhancedDate.getMonth() === 0) {
-      enhancedDate.setFullYear(enhancedDate.getFullYear() - 1);
-      enhancedDate.setMonth(11);
-    } else {
-      enhancedDate.addMonths(-1);
-    }
+    enhancedDate.moveLeft();
 
     update();
   }
 
   function moveRight() {
-    if (enhancedDate.getMonth() === 11) {
-      enhancedDate.setFullYear(enhancedDate.getFullYear() + 1);
-      enhancedDate.setMonth(0);
-    } else {
-      enhancedDate.addMonths(1);
-    }
+    enhancedDate.moveRight();
 
     update();
   }
@@ -59,19 +50,13 @@ function Calendar({ date, updateDate }: P) {
   }
 
   function onUp(x: number) {
+    const w: number = readElementWidth(calendar.current!) * 0.25;
+
     // left
-    if (lastPageX < x) {
-      if (x - lastPageX > readElementWidth(calendar.current!) / 6) {
-        moveLeft();
-      }
-    }
+    x > downX && x - downX > w && moveLeft();
 
     // right
-    if (x < lastPageX) {
-      if (lastPageX - x > readElementWidth(calendar.current!) / 6) {
-        moveRight();
-      }
-    }
+    x < downX && downX - x > w && moveRight();
   }
 
   const DAYS_IN_CURRENT_MONTH = enhancedDate.daysInMonth(); // January 2022 has 31 days
@@ -90,37 +75,20 @@ function Calendar({ date, updateDate }: P) {
 
   const AFTER = $(MAX_DAYS - MIN_DAYS); // 6 days after
 
-  const DAYS = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'] as const;
-
-  const MONTHS = [
-    'Január',
-    'Február',
-    'Marec',
-    'Apríl',
-    'Máj',
-    'Jún',
-    'Júl',
-    'August',
-    'September',
-    'Október',
-    'November',
-    'December',
-  ] as const;
-
   return (
     <div
       className="calendar"
-      display="inline-grid"
+      display="grid"
       fontSize="-1"
-      onMouseDown={e => (lastPageX = e.pageX)}
-      onMouseUp={e => onUp(e.pageX)}
-      onTouchEnd={e => onUp(e.touches[0].pageX)}
-      onTouchStart={e => (lastPageX = e.touches[0].pageX)}
-      p="4"
+      onMouseDown={e => updateDownX(e.clientX)}
+      onMouseUp={e => onUp(e.clientX)}
+      onTouchEnd={e => onUp(e.touches[0].clientX)}
+      onTouchStart={e => updateDownX(e.touches[0].clientX)}
+      p="2"
       ref={calendar}
       textAlign="center"
     >
-      <div alignItems="center" display="flex" mB="2" style={{ gridColumn: '1/8' }}>
+      <div alignItems="center" className="calendar__header" display="flex" mB="2">
         <ChevronLeft onClick={() => moveLeft()} />
         <div mX="auto" onClick={() => updateDate(+new Date())}>
           {MONTHS[enhancedDate.getMonth()]} {enhancedDate.getFullYear()}
@@ -134,7 +102,7 @@ function Calendar({ date, updateDate }: P) {
       ))}
       {BEFORE.map(i => (
         <CalendarDay
-          date={+new EnhancedDate(enhancedDate).addMonths(-1)}
+          date={new EnhancedDate(enhancedDate).addMonths(-1)}
           i={i}
           isDifferentMonth
           key={i}
@@ -142,11 +110,11 @@ function Calendar({ date, updateDate }: P) {
         />
       ))}
       {$(DAYS_IN_CURRENT_MONTH).map(i => (
-        <CalendarDay date={+enhancedDate} i={i} key={i} updateDate={updateDate} />
+        <CalendarDay date={enhancedDate} i={i} key={i} updateDate={updateDate} />
       ))}
       {AFTER.map(i => (
         <CalendarDay
-          date={+new EnhancedDate(enhancedDate).addMonths(1)}
+          date={new EnhancedDate(enhancedDate).addMonths(1)}
           i={i}
           isDifferentMonth
           key={i}
