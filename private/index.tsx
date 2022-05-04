@@ -18,7 +18,7 @@ function A() {
 
   return (
     <div mY="8">
-      <h1 alignItems="center" display="flex" fontSize="4" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
+      <h1 alignItems="center" display="flex" fontSize="6" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
         HorizontalNumberSlider
         <div display="flex">
           <div
@@ -43,7 +43,7 @@ function A() {
             <ChevronLeft />
           </div>
         </div>
-        <div fontSize="2" mL="auto">
+        <div fontSize="4" mL="auto">
           {hasRightSlider ? `from ${price[0]} to ${price[1]}` : `from ${price[0]}`} EUR
         </div>
       </h1>
@@ -55,7 +55,7 @@ function A() {
 function B() {
   return (
     <div mY="8">
-      <h1 fontSize="4" mB="4">
+      <h1 fontSize="6" mB="4">
         HorizontalSlider
       </h1>
       <HorizontalSlider SIZE={48} alignItems="center" display="flex">
@@ -80,7 +80,7 @@ function C() {
 
   return (
     <div mY="8">
-      <h1 fontSize="4" mB="4">
+      <h1 fontSize="6" mB="4">
         Calendar
       </h1>
       <Calendar date={date} updateDate={updateDate} />

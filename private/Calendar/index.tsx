@@ -79,7 +79,7 @@ function Calendar({ date, updateDate }: P) {
     <div
       className="calendar"
       display="grid"
-      fontSize="-1"
+      fontSize="2"
       onMouseDown={e => updateDownX(e.clientX)}
       onMouseUp={e => onUp(e.clientX)}
       onTouchEnd={e => onUp(e.touches[0].clientX)}
