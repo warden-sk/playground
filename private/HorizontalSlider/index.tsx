@@ -15,7 +15,12 @@ interface P {
   children?: React.ReactNode;
 }
 
-function HorizontalSlider({ SIZE, VELOCITY = 0.75, children, ...attributes }: B<JSX.IntrinsicElements['div']> & P) {
+function HorizontalSlider({
+  SIZE,
+  VELOCITY = 0.75,
+  children,
+  ...attributes
+}: EnhancedElement<JSX.IntrinsicElements['div']> & P) {
   const [isLeft, updateIsLeft] = useState<boolean>(false);
   const [isRight, updateIsRight] = useState<boolean>(false);
   const childElement = useRef<HTMLDivElement>(null);

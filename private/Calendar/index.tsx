@@ -11,7 +11,7 @@ import CalendarDay from './CalendarDay';
 import EnhancedDate from '../helpers/EnhancedDate';
 import readElementWidth from '../helpers/readElementWidth';
 
-interface P extends B<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   date: number;
   updateDate: (date: number) => void;
 }

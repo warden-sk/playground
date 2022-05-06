@@ -6,7 +6,7 @@ import './CalendarDay.css';
 
 import React from 'react';
 
-interface P extends B<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   date: Date;
   i: number;
   isDifferentMonth?: boolean;

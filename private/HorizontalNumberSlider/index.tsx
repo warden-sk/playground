@@ -10,7 +10,7 @@ import readElementOffset from '../helpers/readElementOffset';
 import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
 
-interface P extends B<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   hasRightSlider?: boolean;
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
