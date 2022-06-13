@@ -90,13 +90,13 @@ function Calendar({ date, updateDate }: P) {
     >
       <div alignItems="center" className="calendar__header" display="flex" mB="2">
         <ChevronLeft onClick={() => moveLeft()} />
-        <div mX="auto" onClick={() => updateDate(+new Date())}>
+        <div fontWeight="600" mX="auto" onClick={() => updateDate(+new Date())}>
           {MONTHS[enhancedDate.getMonth()]} {enhancedDate.getFullYear()}
         </div>
         <ChevronRight onClick={() => moveRight()} />
       </div>
       {DAYS.map(day => (
-        <div key={day} p="2">
+        <div fontWeight="600" key={day} p="2">
           {day}
         </div>
       ))}
