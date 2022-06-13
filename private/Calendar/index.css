@@ -8,7 +8,6 @@
   border-radius: var(--border-width);
   box-shadow: 0 0 0.5rem hsla(0, 0%, 0%, 0.25);
   color: var(--calendar\(color\));
-  font-weight: 600;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   user-select: none;
 }

@@ -9,7 +9,6 @@
 }
 .calendar__day {
   cursor: pointer;
-  font-weight: 400;
   padding-bottom: 100%;
   position: relative;
 }
@@ -18,7 +17,6 @@
   border-radius: 50%;
   box-shadow: 0 0 0.5rem hsla(0, 0%, 0%, 0.25);
   color: var(--calendar__day_is-current\(color\));
-  font-weight: 600;
 }
 .calendar__day_is-different-month {
   color: var(--calendar__day_is-different-month\(color\));
