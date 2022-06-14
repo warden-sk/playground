@@ -27,24 +27,21 @@ function HorizontalSlider({
   const parentElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
-
     let isDown = false;
     let positionX = 0;
     let startTime: number = +new Date();
     let startX = 0;
+    let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
 
-    function setTranslate(x: number) {
-      if (x) {
-        const translate = new Translate(childElement.current!);
+    function setTranslateX(x: number) {
+      const translate = new Translate(childElement.current!);
 
-        x = x < 0 ? x : 0;
-        x = x > width * -1 ? x : width * -1;
+      x = x < 0 ? x : 0;
+      x = x > width * -1 ? x : width * -1;
 
-        translate.write(x);
+      translate.write(x);
 
-        update();
-      }
+      update();
     }
 
     function update() {
@@ -98,7 +95,7 @@ function HorizontalSlider({
           // right-to-left
           if (x < startX) lastTranslate[0] = positionX - startX + x;
 
-          setTranslate(lastTranslate[0]);
+          setTranslateX(lastTranslate[0]);
         }
       })
     );
@@ -141,7 +138,7 @@ function HorizontalSlider({
     function inertia() {
       const x = positionX + (velocityX[0] - velocityX[1]);
 
-      setTranslate(x);
+      setTranslateX(x);
 
       velocityX[1] *= VELOCITY;
 
@@ -151,8 +148,9 @@ function HorizontalSlider({
     }
 
     function $() {
-      /* (2) */ updateSize();
-      /* (1) */ update();
+      updateSize();
+      update();
+      setTranslateX(0);
     }
 
     $();
