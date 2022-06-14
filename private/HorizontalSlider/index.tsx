@@ -150,7 +150,6 @@ function HorizontalSlider({
     function $() {
       updateSize();
       update();
-      setTranslateX(0);
     }
 
     $();
