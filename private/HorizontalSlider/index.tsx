@@ -7,169 +7,161 @@ import './index.css';
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import Translate from '../helpers/Translate';
-import readMouseOffset from '../helpers/readMouseOffset';
+import onMouseDown from './helpers/onMouseDown';
+import onMouseMove from './helpers/onMouseMove';
+import onMouseUp from './helpers/onMouseUp';
 
 interface P {
-  SIZE?: number;
-  VELOCITY?: number;
+  chevronSize?: number;
   children?: React.ReactNode;
+  hasPercentage?: boolean;
+}
+
+export interface State {
+  childElement: HTMLDivElement;
+  endInertia: () => void;
+  endX: number;
+  isDown: boolean;
+  parentElement: HTMLDivElement;
+  setTranslateX: (x: number) => void;
+  startInertia: () => void;
+  startTime: number;
+  startX: number;
+  velocityX: [number, number];
+  width: number;
 }
 
 function HorizontalSlider({
-  SIZE,
-  VELOCITY = 0.75,
+  chevronSize,
   children,
-  ...attributes
+  hasPercentage,
+  ...$
 }: EnhancedElement<JSX.IntrinsicElements['div']> & P) {
-  const [isLeft, updateIsLeft] = useState<boolean>(false);
-  const [isRight, updateIsRight] = useState<boolean>(false);
-  const childElement = useRef<HTMLDivElement>(null);
-  const parentElement = useRef<HTMLDivElement>(null);
+  const [chevron, updateChevron] = useState<[left: boolean, right: boolean]>([false, false]),
+    childElement = useRef<HTMLDivElement>(null),
+    parentElement = useRef<HTMLDivElement>(null),
+    [percentage, updatePercentage] = useState<number>(0);
 
   useEffect(() => {
-    let isDown = false;
-    let positionX = 0;
-    let startTime: number = +new Date();
-    let startX = 0;
-    let width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
+    const state: State = {
+      childElement: childElement.current!,
+      endInertia,
+      endX: 0,
+      isDown: false,
+      parentElement: parentElement.current!,
+      setTranslateX,
+      startInertia,
+      startTime: +new Date(),
+      startX: 0,
+      velocityX: [0, 0],
+      width: childElement.current!.scrollWidth - childElement.current!.clientWidth,
+    };
 
     function setTranslateX(x: number) {
-      const translate = new Translate(childElement.current!);
-
       x = x < 0 ? x : 0;
-      x = x > width * -1 ? x : width * -1;
+      x = x > state.width * -1 ? x : state.width * -1;
 
-      translate.write(x);
+      new Translate(state.childElement).write(x);
 
-      update();
+      update(x);
     }
 
-    function update() {
-      const [translateX] = new Translate(childElement.current!).read();
+    function update(translateX: number) {
+      updatePercentage(((translateX * -1) / state.width) * 100);
 
       if (translateX === 0) {
-        updateIsLeft(false);
-        parentElement.current!.classList.remove('t-left');
+        updateChevron(chevron => [false, chevron[1]]);
       } else {
-        updateIsLeft(true);
-        parentElement.current!.classList.add('t-left');
+        updateChevron(chevron => [true, chevron[1]]);
       }
 
-      if (translateX === width * -1) {
-        updateIsRight(false);
-        parentElement.current!.classList.remove('t-right');
+      if (translateX === state.width * -1) {
+        updateChevron(chevron => [chevron[0], false]);
       } else {
-        updateIsRight(true);
-        parentElement.current!.classList.add('t-right');
+        updateChevron(chevron => [chevron[0], true]);
       }
     }
 
-    function updateSize() {
-      width = parentElement.current!.scrollWidth - parentElement.current!.clientWidth;
+    function updateWidth() {
+      const translate = new Translate(childElement.current!);
+
+      const [translateX] = translate.read();
+
+      const percentage = ((translateX * -1) / state.width) * 100;
+
+      state.width = childElement.current!.scrollWidth - childElement.current!.clientWidth;
+
+      state.setTranslateX((state.width / 100) * percentage * -1);
     }
 
-    ['mousedown', 'touchstart'].forEach(type =>
-      parentElement.current!.addEventListener(type, event => {
-        startTime = +new Date();
-        endInertia();
-
-        isDown = true;
-        [startX] = readMouseOffset(event);
-      })
+    (['mousedown', 'touchstart'] as const).forEach(type =>
+      state.parentElement.addEventListener(type, onMouseDown(state))
     );
 
-    parentElement.current!.addEventListener('mouseleave', () => (isDown = false));
+    state.parentElement.addEventListener('mouseleave', () => {
+      state.isDown = false;
+      state.parentElement.classList.remove('t-moving');
+    });
 
-    ['mousemove', 'touchmove'].forEach(type =>
-      parentElement.current!.addEventListener(type, event => {
-        if (isDown) {
-          event.preventDefault();
-
-          const lastTranslate: [x: number] = [0];
-
-          const [x] = readMouseOffset(event);
-
-          // left-to-right
-          if (x > startX) lastTranslate[0] = positionX + x - startX;
-
-          // right-to-left
-          if (x < startX) lastTranslate[0] = positionX - startX + x;
-
-          setTranslateX(lastTranslate[0]);
-        }
-      })
+    (['mousemove', 'touchmove'] as const).forEach(type =>
+      state.parentElement.addEventListener(type, onMouseMove(state))
     );
 
-    ['mouseup', 'touchend'].forEach(type =>
-      parentElement.current!.addEventListener(type, () => {
-        isDown = false;
+    (['mouseup', 'touchend'] as const).forEach(type => state.parentElement.addEventListener(type, onMouseUp(state)));
 
-        const [translateX] = new Translate(childElement.current!).read();
-
-        // X
-        velocityX[1] = translateX - positionX;
-        velocityX[0] = velocityX[1];
-        positionX = translateX;
-
-        const endTime = +new Date();
-
-        if (endTime - startTime < 375) {
-          startInertia();
-        }
-      })
-    );
-
-    const velocityX: [number, number] = [0, 0];
+    /* Inertia */
 
     let idOfInertia: number;
 
     function endInertia() {
       cancelAnimationFrame(idOfInertia);
 
-      const [translateX] = new Translate(childElement.current!).read();
+      const [translateX] = new Translate(state.childElement).read();
 
-      positionX = translateX;
+      state.endX = translateX;
+    }
+
+    function inertia() {
+      const x = state.endX + (state.velocityX[0] - state.velocityX[1]);
+
+      setTranslateX(x);
+
+      state.velocityX[1] *= 0.875;
+
+      if (Math.abs(state.velocityX[1]) > 0.5) {
+        startInertia();
+      }
     }
 
     function startInertia() {
       idOfInertia = requestAnimationFrame(inertia);
     }
 
-    function inertia() {
-      const x = positionX + (velocityX[0] - velocityX[1]);
+    /* ResizeObserver */
 
-      setTranslateX(x);
+    const resizeObserver = new ResizeObserver(() => {
+      updateWidth();
+    });
 
-      velocityX[1] *= VELOCITY;
-
-      if (Math.abs(velocityX[1]) > 0.5) {
-        idOfInertia = requestAnimationFrame(inertia);
-      }
-    }
-
-    function $() {
-      updateSize();
-      update();
-    }
-
-    $();
-
-    window.addEventListener('resize', $);
-
-    return () => {
-      window.removeEventListener('resize', $);
-    };
+    resizeObserver.observe(state.parentElement);
   }, [children]);
 
   return (
-    <div className="t">
-      {isLeft && <ChevronLeft className="t-chevron-left" size={SIZE} />}
-      <div onDragStart={e => e.preventDefault()} ref={parentElement} style={{ overflow: 'hidden' }}>
-        <div {...attributes} ref={childElement}>
-          {children}
+    <div>
+      <div className="t">
+        {chevron[0] && <ChevronLeft className="t-chevron-left" size={chevronSize} />}
+        <div ref={parentElement} style={{ overflowX: 'hidden' }}>
+          <div {...$} ref={childElement}>
+            {children}
+          </div>
         </div>
+        {chevron[1] && <ChevronRight className="t-chevron-right" size={chevronSize} />}
       </div>
-      {isRight && <ChevronRight className="t-chevron-right" size={SIZE} />}
+      {hasPercentage && (
+        <div className="t-percentage" mT="4">
+          <div className="t-percentage__div" style={{ width: `${percentage}%` }} />
+        </div>
+      )}
     </div>
   );
 }
