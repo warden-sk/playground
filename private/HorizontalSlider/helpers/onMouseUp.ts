@@ -13,8 +13,7 @@ function onMouseUp(state: State) {
     const [translateX] = new Translate(state.childElement).read();
 
     // X
-    state.velocityX[1] = (translateX - state.endX) * 2;
-    state.velocityX[0] = state.velocityX[1];
+    state.velocityX = (translateX - state.endX) * 2;
     state.endX = translateX;
 
     const endTime = +new Date();

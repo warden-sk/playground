@@ -21,13 +21,14 @@ export interface State {
   childElement: HTMLDivElement;
   endInertia: () => void;
   endX: number;
+  idOfInertia: number;
   isDown: boolean;
   parentElement: HTMLDivElement;
   setTranslateX: (x: number) => void;
   startInertia: () => void;
   startTime: number;
   startX: number;
-  velocityX: [number, number];
+  velocityX: number;
   width: number;
 }
 
@@ -38,22 +39,23 @@ function HorizontalSlider({
   ...$
 }: EnhancedElement<JSX.IntrinsicElements['div']> & P) {
   const [chevron, updateChevron] = useState<[left: boolean, right: boolean]>([false, false]),
+    [percentage, updatePercentage] = useState<number>(0),
     childElement = useRef<HTMLDivElement>(null),
-    parentElement = useRef<HTMLDivElement>(null),
-    [percentage, updatePercentage] = useState<number>(0);
+    parentElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const state: State = {
       childElement: childElement.current!,
       endInertia,
       endX: 0,
+      idOfInertia: 0,
       isDown: false,
       parentElement: parentElement.current!,
       setTranslateX,
       startInertia,
-      startTime: +new Date(),
+      startTime: 0,
       startX: 0,
-      velocityX: [0, 0],
+      velocityX: 0,
       width: childElement.current!.scrollWidth - childElement.current!.clientWidth,
     };
 
@@ -111,39 +113,34 @@ function HorizontalSlider({
 
     /* Inertia */
 
-    let idOfInertia: number;
-
     function endInertia() {
-      cancelAnimationFrame(idOfInertia);
+      cancelAnimationFrame(state.idOfInertia);
 
       const [translateX] = new Translate(state.childElement).read();
 
       state.endX = translateX;
     }
 
+    let $ = 0;
     function inertia() {
-      const x = state.endX + (state.velocityX[0] - state.velocityX[1]);
+      const x = state.endX + (state.velocityX - $);
 
-      setTranslateX(x);
+      state.setTranslateX(x);
 
-      state.velocityX[1] *= 0.875;
+      $ *= 0.75;
 
-      if (Math.abs(state.velocityX[1]) > 0.5) {
-        startInertia();
+      if (Math.abs($) > 0.5) {
+        state.idOfInertia = requestAnimationFrame(inertia);
       }
     }
 
     function startInertia() {
-      idOfInertia = requestAnimationFrame(inertia);
+      $ = state.velocityX;
+
+      state.idOfInertia = requestAnimationFrame(inertia);
     }
 
-    /* ResizeObserver */
-
-    const resizeObserver = new ResizeObserver(() => {
-      updateWidth();
-    });
-
-    resizeObserver.observe(state.parentElement);
+    new ResizeObserver(updateWidth).observe(state.parentElement);
   }, [children]);
 
   return (
