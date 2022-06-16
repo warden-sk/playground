@@ -55,7 +55,7 @@ function A() {
 function B() {
   return (
     <div mY="8">
-      <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage>
+      <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage isDevelopment>
         {[...new Array(16)].map(($, i) => (
           <a flex="none" href="https://google.sk" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div

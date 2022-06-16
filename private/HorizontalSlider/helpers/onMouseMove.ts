@@ -5,12 +5,12 @@
 import type { State } from '../index';
 import readMouseOffset from '../../helpers/readMouseOffset';
 
-function onMouseMove(state: State) {
+function onMouseMove(state: State, updateState: (on: (state: State) => State) => void) {
   return (event: MouseEvent | TouchEvent) => {
     if (state.isDown) {
       event.preventDefault();
 
-      state.parentElement.classList.add('t-moving');
+      state.parentElement().classList.add('t-moving');
 
       let translateX = 0;
 
@@ -26,7 +26,7 @@ function onMouseMove(state: State) {
         translateX = state.endX - state.startX + x;
       }
 
-      state.setTranslateX(translateX);
+      state.setTranslateX(state, translateX);
     }
   };
 }

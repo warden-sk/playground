@@ -1,0 +1,20 @@
+/*
+ * Copyright 2022 Marek Kobida
+ */
+
+:root {
+  --t-percentage\(background-color\): hsl(0, 0%, 25%);
+  --t-percentage\(height\): var(--border-width);
+  --t-percentage__div\(background-color\): hsl(0, 0%, 75%);
+}
+.t-percentage {
+  background-color: var(--t-percentage\(background-color\));
+  border-radius: calc(var(--t-percentage\(height\)) / 2);
+  height: var(--t-percentage\(height\));
+}
+.t-percentage__div {
+  background-color: var(--t-percentage__div\(background-color\));
+  border-radius: inherit;
+  box-shadow: 0 0 0.5rem hsla(0, 0%, 0%, 0.25);
+  height: 100%;
+}

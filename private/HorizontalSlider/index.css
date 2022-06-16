@@ -1,10 +1,10 @@
+/*
+ * Copyright 2022 Marek Kobida
+ */
+
 :root {
   --t-chevron\(background-color\): hsl(0, 0%, 12.5%);
   --t-chevron\(color\): hsl(0, 0%, 87.5%);
-
-  --t-percentage\(background-color\): hsl(0, 0%, 25%);
-  --t-percentage\(height\): var(--border-width);
-  --t-percentage__div\(background-color\): hsl(0, 0%, 75%);
 }
 .t {
   position: relative;
@@ -28,6 +28,11 @@
   right: 0;
   transform: translate(-25%, -50%);
 }
+.t-development {
+  background-color: var(--t-percentage\(background-color\));
+  border-radius: var(--border-width);
+  color: var(--t-percentage__div\(background-color\));
+}
 .t-moving {
   position: relative;
 }
@@ -38,15 +43,4 @@
   position: absolute;
   right: 0;
   top: 0;
-}
-.t-percentage {
-  background-color: var(--t-percentage\(background-color\));
-  border-radius: calc(var(--t-percentage\(height\)) / 2);
-  height: var(--t-percentage\(height\));
-}
-.t-percentage__div {
-  background-color: var(--t-percentage__div\(background-color\));
-  border-radius: inherit;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
-  height: 100%;
 }

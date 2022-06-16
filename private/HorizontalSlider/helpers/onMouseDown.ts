@@ -5,12 +5,14 @@
 import type { State } from '../index';
 import readMouseOffset from '../../helpers/readMouseOffset';
 
-function onMouseDown(state: State) {
+function onMouseDown(state: State, updateState: (on: (state: State) => State) => void) {
   return (event: MouseEvent | TouchEvent) => {
-    state.endInertia();
-    state.isDown = true;
-    state.startTime = +new Date();
-    [state.startX] = readMouseOffset(event);
+    updateState(state => ({
+      ...state,
+      isDown: true,
+      startTime: +new Date(),
+      startX: readMouseOffset(event)[0],
+    }));
   };
 }
 

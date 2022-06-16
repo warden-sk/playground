@@ -6,8 +6,10 @@ import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
 import React, { useEffect, useRef, useState } from 'react';
+import Percentage from './Percentage';
 import Translate from '../helpers/Translate';
 import onMouseDown from './helpers/onMouseDown';
+import onMouseLeave from './helpers/onMouseLeave';
 import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
 
@@ -15,17 +17,16 @@ interface P {
   chevronSize?: number;
   children?: React.ReactNode;
   hasPercentage?: boolean;
+  isDevelopment?: boolean;
 }
 
 export interface State {
-  childElement: HTMLDivElement;
-  endInertia: () => void;
+  childElement: () => HTMLDivElement;
   endX: number;
-  idOfInertia: number;
   isDown: boolean;
-  parentElement: HTMLDivElement;
-  setTranslateX: (x: number) => void;
-  startInertia: () => void;
+  parentElement: () => HTMLDivElement;
+  percentage: number;
+  setTranslateX: (state: State, x: number) => void;
   startTime: number;
   startX: number;
   velocityX: number;
@@ -36,115 +37,136 @@ function HorizontalSlider({
   chevronSize,
   children,
   hasPercentage,
+  isDevelopment,
   ...$
 }: EnhancedElement<JSX.IntrinsicElements['div']> & P) {
   const [chevron, updateChevron] = useState<[left: boolean, right: boolean]>([false, false]),
-    [percentage, updatePercentage] = useState<number>(0),
-    childElement = useRef<HTMLDivElement>(null),
-    parentElement = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const state: State = {
-      childElement: childElement.current!,
-      endInertia,
+    [state, updateState] = useState<State>({
+      childElement: () => childElement.current!,
       endX: 0,
-      idOfInertia: 0,
       isDown: false,
-      parentElement: parentElement.current!,
+      parentElement: () => parentElement.current!,
+      percentage: 0,
       setTranslateX,
-      startInertia,
       startTime: 0,
       startX: 0,
       velocityX: 0,
-      width: childElement.current!.scrollWidth - childElement.current!.clientWidth,
+      width: 0,
+    }),
+    childElement = useRef<HTMLDivElement>(null),
+    parentElement = useRef<HTMLDivElement>(null);
+
+  const onMouseDown2 = onMouseDown(state, updateState);
+  const onMouseLeave2 = onMouseLeave(state, updateState);
+  const onMouseMove2 = onMouseMove(state, updateState);
+  const onMouseUp2 = onMouseUp(state, updateState);
+
+  function setTranslateX(state: State, x: number) {
+    x = x < 0 ? x : 0;
+    x = x > state.width * -1 ? x : state.width * -1;
+
+    new Translate(state.childElement()).write(x);
+
+    update(x);
+  }
+
+  function update(translateX: number) {
+    updateState(state => ({ ...state, percentage: ((translateX * -1) / state.width) * 100 }));
+
+    updateChevron(() => [translateX !== 0, translateX !== state.width * -1]);
+  }
+
+  useEffect(() => {
+    updateState(state => ({ ...state, width: state.childElement().scrollWidth - state.childElement().clientWidth }));
+  }, []);
+
+  useEffect(() => {
+    state.width && update(0);
+  }, [state.width]);
+
+  useEffect(() => {
+    let $$ = 0;
+    let idOfInertia = 0;
+
+    /* (1) */
+    if (state.isDown) {
+      cancelAnimationFrame(idOfInertia);
+
+      const [translateX] = new Translate(state.childElement()).read();
+
+      updateState(state => ({ ...state, endX: translateX }));
+    }
+
+    /* (2) */
+    if (!state.isDown && state.startTime) {
+      function inertia() {
+        const x = state.endX + (state.velocityX - $$);
+
+        setTranslateX(state, x);
+
+        $$ *= 0.75;
+
+        if (Math.abs($$) > 0.5) {
+          idOfInertia = requestAnimationFrame(inertia);
+        }
+      }
+
+      function startInertia() {
+        $$ = state.velocityX;
+
+        idOfInertia = requestAnimationFrame(inertia);
+      }
+
+      const endTime = +new Date();
+
+      if (endTime - state.startTime < 375) {
+        startInertia();
+      }
+    }
+  }, [state.isDown]);
+
+  useEffect(() => {
+    (['mousedown', 'touchstart'] as const).forEach(type => state.parentElement().addEventListener(type, onMouseDown2));
+
+    state.parentElement().addEventListener('mouseleave', onMouseLeave2);
+
+    (['mousemove', 'touchmove'] as const).forEach(type => state.parentElement().addEventListener(type, onMouseMove2));
+
+    (['mouseup', 'touchend'] as const).forEach(type => state.parentElement().addEventListener(type, onMouseUp2));
+
+    return () => {
+      (['mousedown', 'touchstart'] as const).forEach(type =>
+        state.parentElement().removeEventListener(type, onMouseDown2)
+      );
+
+      state.parentElement().removeEventListener('mouseleave', onMouseLeave2);
+
+      (['mousemove', 'touchmove'] as const).forEach(type =>
+        state.parentElement().removeEventListener(type, onMouseMove2)
+      );
+
+      (['mouseup', 'touchend'] as const).forEach(type => state.parentElement().removeEventListener(type, onMouseUp2));
     };
-
-    function setTranslateX(x: number) {
-      x = x < 0 ? x : 0;
-      x = x > state.width * -1 ? x : state.width * -1;
-
-      new Translate(state.childElement).write(x);
-
-      update(x);
-    }
-
-    function update(translateX: number) {
-      updatePercentage(((translateX * -1) / state.width) * 100);
-
-      if (translateX === 0) {
-        updateChevron(chevron => [false, chevron[1]]);
-      } else {
-        updateChevron(chevron => [true, chevron[1]]);
-      }
-
-      if (translateX === state.width * -1) {
-        updateChevron(chevron => [chevron[0], false]);
-      } else {
-        updateChevron(chevron => [chevron[0], true]);
-      }
-    }
-
-    function updateWidth() {
-      const translate = new Translate(childElement.current!);
-
-      const [translateX] = translate.read();
-
-      const percentage = ((translateX * -1) / state.width) * 100;
-
-      state.width = childElement.current!.scrollWidth - childElement.current!.clientWidth;
-
-      state.setTranslateX((state.width / 100) * percentage * -1);
-    }
-
-    (['mousedown', 'touchstart'] as const).forEach(type =>
-      state.parentElement.addEventListener(type, onMouseDown(state))
-    );
-
-    state.parentElement.addEventListener('mouseleave', () => {
-      state.isDown = false;
-      state.parentElement.classList.remove('t-moving');
-    });
-
-    (['mousemove', 'touchmove'] as const).forEach(type =>
-      state.parentElement.addEventListener(type, onMouseMove(state))
-    );
-
-    (['mouseup', 'touchend'] as const).forEach(type => state.parentElement.addEventListener(type, onMouseUp(state)));
-
-    /* Inertia */
-
-    function endInertia() {
-      cancelAnimationFrame(state.idOfInertia);
-
-      const [translateX] = new Translate(state.childElement).read();
-
-      state.endX = translateX;
-    }
-
-    let $ = 0;
-    function inertia() {
-      const x = state.endX + (state.velocityX - $);
-
-      state.setTranslateX(x);
-
-      $ *= 0.75;
-
-      if (Math.abs($) > 0.5) {
-        state.idOfInertia = requestAnimationFrame(inertia);
-      }
-    }
-
-    function startInertia() {
-      $ = state.velocityX;
-
-      state.idOfInertia = requestAnimationFrame(inertia);
-    }
-
-    new ResizeObserver(updateWidth).observe(state.parentElement);
-  }, [children]);
+  }, [children, state.endX, state.isDown, state.startX]);
 
   return (
     <div>
+      {isDevelopment && (
+        <div display="flex" flexWrap="wrap" justifyContent="center" p="1">
+          {[
+            ['endX', `${state.endX}px`],
+            ['isDown', state.isDown.toString()],
+            ['percentage', `${state.percentage}%`],
+            ['startX', `${state.startX}px`],
+          ].map(([left, right]) => (
+            <div p="1">
+              <div className="t-development" fontSize="1" pX="1">
+                {left} · {right}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="t">
         {chevron[0] && <ChevronLeft className="t-chevron-left" size={chevronSize} />}
         <div ref={parentElement} style={{ overflowX: 'hidden' }}>
@@ -154,11 +176,7 @@ function HorizontalSlider({
         </div>
         {chevron[1] && <ChevronRight className="t-chevron-right" size={chevronSize} />}
       </div>
-      {hasPercentage && (
-        <div className="t-percentage" mT="4">
-          <div className="t-percentage__div" style={{ width: `${percentage}%` }} />
-        </div>
-      )}
+      {hasPercentage && <Percentage percentage={state.percentage} />}
     </div>
   );
 }

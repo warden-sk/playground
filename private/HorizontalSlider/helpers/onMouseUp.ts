@@ -5,22 +5,16 @@
 import type { State } from '../index';
 import Translate from '../../helpers/Translate';
 
-function onMouseUp(state: State) {
+function onMouseUp(state: State, updateState: (on: (state: State) => State) => void) {
   return () => {
-    state.isDown = false;
-    state.parentElement.classList.remove('t-moving');
+    updateState(state => ({ ...state, isDown: false }));
 
-    const [translateX] = new Translate(state.childElement).read();
+    state.parentElement().classList.remove('t-moving');
 
-    // X
-    state.velocityX = (translateX - state.endX) * 2;
-    state.endX = translateX;
+    const [translateX] = new Translate(state.childElement()).read();
 
-    const endTime = +new Date();
-
-    if (endTime - state.startTime < 375) {
-      state.startInertia();
-    }
+    //                                (1)                                 (2)
+    updateState(state => ({ ...state, velocityX: translateX - state.endX, endX: translateX }));
   };
 }
 
