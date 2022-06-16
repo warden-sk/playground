@@ -4,11 +4,11 @@
 
 import type { State } from '../index';
 
-function onMouseLeave(state: State, updateState: (on: (state: State) => State) => void) {
+function onMouseLeave(state: () => State, updateState: (on: (state: State) => State) => void) {
   return () => {
     updateState(state => ({ ...state, isDown: false }));
 
-    state.parentElement().classList.remove('t-moving');
+    state().parentElement().classList.remove('t-moving');
   };
 }
 

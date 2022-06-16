@@ -28,11 +28,6 @@
   right: 0;
   transform: translate(-25%, -50%);
 }
-.t-development {
-  background-color: var(--t-percentage\(background-color\));
-  border-radius: var(--border-width);
-  color: var(--t-percentage__div\(background-color\));
-}
 .t-moving {
   position: relative;
 }
