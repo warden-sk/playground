@@ -11,14 +11,14 @@ function onMouseUp(state: () => State, updateState: (on: (state: State) => State
 
     state().parentElement().classList.remove('t-moving');
 
-    const [lastTranslateX] = state().translate().read();
+    const [translateX] = state().translate().read();
 
     const whereToGo: [number, number] = [0, 0];
-    whereToGo[0] = (lastTranslateX - state().lastTranslateX) * 2;
+    whereToGo[0] = (translateX - state().lastTranslateX) * 2;
     whereToGo[1] = whereToGo[0];
 
-    //                                (1)             (2)
-    updateState(state => ({ ...state, lastTranslateX, whereToGo }));
+    //                                (1)                         (2)
+    updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
 
     const endTime = +new Date();
 

@@ -56,7 +56,7 @@ function B() {
   return (
     <div mY="8">
       <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage>
-        {[...new Array(16)].map(($, i) => (
+        {[...new Array(16)].map(() => (
           <a flex="none" href="https://google.sk" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               alignItems="center"
@@ -68,9 +68,7 @@ function B() {
                 borderRadius: '0.125rem',
                 boxShadow: '0 0 0.5rem rgba(0, 0, 0, 0.25)',
               }}
-            >
-              {i + 1}
-            </div>
+            />
           </a>
         ))}
       </HorizontalSlider>

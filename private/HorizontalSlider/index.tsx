@@ -122,11 +122,14 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronLeft
             className="t-chevron-left"
             onClick={() => {
-              const [lastTranslateX] = state.current.translate().read();
+              const [translateX] = state.current.translate().read();
+
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = state.current.width * 0.25;
               whereToGo[1] = whereToGo[0];
-              updateState(state => ({ ...state, lastTranslateX, whereToGo }));
+
+              updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
+
               inertia(() => state.current, updateState)();
             }}
             size={chevronSize}
@@ -141,11 +144,14 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronRight
             className="t-chevron-right"
             onClick={() => {
-              const [lastTranslateX] = state.current.translate().read();
+              const [translateX] = state.current.translate().read();
+
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = state.current.width * 0.25 * -1;
               whereToGo[1] = whereToGo[0];
-              updateState(state => ({ ...state, lastTranslateX, whereToGo }));
+
+              updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
+
               inertia(() => state.current, updateState)();
             }}
             size={chevronSize}
