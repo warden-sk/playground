@@ -72,8 +72,12 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     state.current = on(state.current);
   }
 
-  useEffect(() => {
+  function updateWidth() {
     updateState(state => ({ ...state, width: state.childElement().scrollWidth - state.childElement().clientWidth }));
+  }
+
+  useEffect(() => {
+    updateWidth();
   }, []);
 
   useEffect(() => {
@@ -95,7 +99,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
 
       const percentage = ((translateX * -1) / state.current.width) * 100;
 
-      updateState(state => ({ ...state, width: state.childElement().scrollWidth - state.childElement().clientWidth }));
+      updateWidth();
 
       setTranslateX((state.current.width / 100) * percentage * -1);
     }).observe(parentElement.current!);
