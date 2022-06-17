@@ -10,14 +10,10 @@ function inertia(state: () => State, updateState: (on: (state: State) => State) 
 
     state().setTranslateX(x);
 
-    state().whereToGo[1] *= 0.75;
+    updateState(state => ({ ...state, whereToGo: [state.whereToGo[0], state.whereToGo[1] * 0.75] }));
 
     if (Math.abs(state().whereToGo[1]) > 0.5) {
       updateState(state => ({ ...state, idOfInertia: requestAnimationFrame(inertia(() => state, updateState)) }));
-    } else {
-      const [translateX] = state().translate().read();
-
-      updateState(state => ({ ...state, lastTranslateX: translateX }));
     }
   };
 }

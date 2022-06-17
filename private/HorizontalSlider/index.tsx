@@ -21,11 +21,10 @@ interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
 }
 
 export interface State {
-  childElement: () => HTMLDivElement;
   idOfInertia: number;
   isDown: boolean;
+  isMoving: (isMoving: boolean) => void;
   lastTranslateX: number;
-  parentElement: () => HTMLDivElement;
   percentage: number;
   setTranslateX: (x: number) => void;
   startTime: number;
@@ -40,11 +39,13 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     childElement = useRef<HTMLDivElement>(null),
     parentElement = useRef<HTMLDivElement>(null),
     state = useRef<State>({
-      childElement: () => childElement.current!,
       idOfInertia: 0,
       isDown: false,
+      isMoving: isMoving =>
+        isMoving
+          ? parentElement.current!.classList.add('t-moving')
+          : parentElement.current!.classList.remove('t-moving'),
       lastTranslateX: 0,
-      parentElement: () => parentElement.current!,
       percentage: 0,
       setTranslateX,
       startTime: 0,
@@ -73,7 +74,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
   }
 
   function updateWidth() {
-    updateState(state => ({ ...state, width: state.childElement().scrollWidth - state.childElement().clientWidth }));
+    updateState(state => ({ ...state, width: childElement.current!.scrollWidth - childElement.current!.clientWidth }));
   }
 
   useEffect(() => {

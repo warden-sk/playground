@@ -9,7 +9,7 @@ function onMouseUp(state: () => State, updateState: (on: (state: State) => State
   return () => {
     updateState(state => ({ ...state, isDown: false }));
 
-    state().parentElement().classList.remove('t-moving');
+    state().isMoving(false);
 
     const [translateX] = state().translate().read();
 

@@ -8,7 +8,7 @@ function onMouseLeave(state: () => State, updateState: (on: (state: State) => St
   return () => {
     updateState(state => ({ ...state, isDown: false }));
 
-    state().parentElement().classList.remove('t-moving');
+    state().isMoving(false);
   };
 }
 

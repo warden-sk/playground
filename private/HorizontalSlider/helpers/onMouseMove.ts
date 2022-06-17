@@ -10,7 +10,7 @@ function onMouseMove(state: () => State) {
     if (state().isDown) {
       event.preventDefault();
 
-      state().parentElement().classList.add('t-moving');
+      state().isMoving(true);
 
       const [x] = readMouseOffset(event);
 
