@@ -6,13 +6,13 @@ import './Percentage.css';
 
 import React from 'react';
 
-interface P {
+interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   percentage: number;
 }
 
-function Percentage({ percentage }: P) {
+function Percentage({ className, percentage, ...$ }: P) {
   return (
-    <div className="t-percentage" mT="4">
+    <div {...$} className={[className, 't-percentage']}>
       <div className="t-percentage__div" style={{ width: `${percentage}%` }} />
     </div>
   );
