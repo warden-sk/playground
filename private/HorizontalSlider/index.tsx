@@ -5,14 +5,15 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
-import React, { useEffect, useRef, useState } from 'react';
 import Percentage from './Percentage';
+import React from 'react';
 import Translate from '../helpers/Translate';
 import inertia from './helpers/inertia';
 import onMouseDown from './helpers/onMouseDown';
 import onMouseLeave from './helpers/onMouseLeave';
 import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
+import readElementWidth from '../helpers/readElementWidth';
 
 interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   chevronSize?: number;
@@ -35,10 +36,10 @@ export interface State {
 }
 
 function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
-  const [chevron, updateChevron] = useState<[left: boolean, right: boolean]>([false, false]),
-    childElement = useRef<HTMLDivElement>(null),
-    parentElement = useRef<HTMLDivElement>(null),
-    state = useRef<State>({
+  const [chevron, updateChevron] = React.useState<[left: boolean, right: boolean]>([false, false]),
+    childElement = React.useRef<HTMLDivElement>(null),
+    parentElement = React.useRef<HTMLDivElement>(null),
+    state = React.useRef<State>({
       idOfInertia: 0,
       isDown: false,
       isMoving: isMoving =>
@@ -74,14 +75,17 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
   }
 
   function updateWidth() {
-    updateState(state => ({ ...state, width: childElement.current!.scrollWidth - childElement.current!.clientWidth }));
+    updateState(state => ({
+      ...state,
+      width: childElement.current!.scrollWidth - readElementWidth(childElement.current!),
+    }));
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     updateWidth();
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const onMouseDown2 = onMouseDown(() => state.current, updateState);
     const onMouseLeave2 = onMouseLeave(() => state.current, updateState);
     const onMouseMove2 = onMouseMove(() => state.current);
@@ -130,7 +134,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
               const [translateX] = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
-              whereToGo[0] = state.current.width * 0.25;
+              whereToGo[0] = readElementWidth(parentElement.current!) * 0.5;
               whereToGo[1] = whereToGo[0];
 
               updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
@@ -152,7 +156,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
               const [translateX] = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
-              whereToGo[0] = state.current.width * 0.25 * -1;
+              whereToGo[0] = readElementWidth(parentElement.current!) * 0.5 * -1;
               whereToGo[1] = whereToGo[0];
 
               updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
