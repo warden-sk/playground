@@ -110,17 +110,21 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     }).observe(parentElement.current!);
 
     return () => {
-      (['mousedown', 'touchstart'] as const).forEach(type =>
-        parentElement.current!.removeEventListener(type, onMouseDown2)
-      );
+      if (parentElement.current) {
+        (['mousedown', 'touchstart'] as const).forEach(type =>
+          parentElement.current!.removeEventListener(type, onMouseDown2)
+        );
 
-      parentElement.current!.removeEventListener('mouseleave', onMouseLeave2);
+        parentElement.current.removeEventListener('mouseleave', onMouseLeave2);
 
-      (['mousemove', 'touchmove'] as const).forEach(type =>
-        parentElement.current!.removeEventListener(type, onMouseMove2)
-      );
+        (['mousemove', 'touchmove'] as const).forEach(type =>
+          parentElement.current!.removeEventListener(type, onMouseMove2)
+        );
 
-      (['mouseup', 'touchend'] as const).forEach(type => parentElement.current!.removeEventListener(type, onMouseUp2));
+        (['mouseup', 'touchend'] as const).forEach(type =>
+          parentElement.current!.removeEventListener(type, onMouseUp2)
+        );
+      }
     };
   }, [children]);
 

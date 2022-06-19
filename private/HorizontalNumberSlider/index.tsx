@@ -11,7 +11,6 @@ import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
 
 interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
-  hasRightSlider?: boolean;
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
@@ -30,7 +29,7 @@ interface StorageElement {
   x: number;
 }
 
-function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size, value, ...attributes }: P) {
+function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attributes }: P) {
   const [storage, updateStorage] = React.useState<Storage>({
     left: { calculated: [0, 0], isMouseDown: false, x: 0 },
     right: { calculated: [0, 0], isMouseDown: false, x: 0 },
@@ -116,12 +115,8 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
   }
 
   React.useEffect(() => {
-    storage.right.calculated[1] && moveTo('right', $(storage.right.calculated[1]));
-  }, [hasRightSlider]);
-
-  React.useEffect(() => {
     moveTo('left', $(value?.[0] ?? storage.size[0]));
-    hasRightSlider && moveTo('right', $(value?.[1] ?? storage.size[1]));
+    moveTo('right', $(value?.[1] ?? storage.size[1]));
   }, [value]);
 
   React.useEffect(() => {
@@ -149,7 +144,7 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
     function onTest() {
       moveTo('left', availableWidth() * storage.left.calculated[0]);
 
-      hasRightSlider && moveTo('right', availableWidth() * storage.right.calculated[0]);
+      moveTo('right', availableWidth() * storage.right.calculated[0]);
     }
 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
@@ -173,14 +168,12 @@ function HorizontalNumberSlider({ className, hasRightSlider, onMove, onUp, size,
         onTouchStart={onMouseDown('left')}
         ref={elementStorage.left}
       />
-      {hasRightSlider && (
-        <div
-          className="horizontal-number-slider__right"
-          onMouseDown={onMouseDown('right')}
-          onTouchStart={onMouseDown('right')}
-          ref={elementStorage.right}
-        />
-      )}
+      <div
+        className="horizontal-number-slider__right"
+        onMouseDown={onMouseDown('right')}
+        onTouchStart={onMouseDown('right')}
+        ref={elementStorage.right}
+      />
     </div>
   );
 }

@@ -3,13 +3,5 @@
 }
 body {
   background-color: hsl(0, 0%, 12.5%);
-  color: hsl(0, 0%, 50%);
-}
-.variable {
-  background-color: hsl(0, 0%, 25%);
-  border-radius: 0.125rem;
-  cursor: pointer;
-}
-.variable_active {
-  border: 0.125rem solid hsl(0, 0%, 50%);
+  color: hsl(0, 0%, 87.5%);
 }
