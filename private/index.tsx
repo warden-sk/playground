@@ -18,7 +18,7 @@ function A() {
       <h1 alignItems="center" display="flex" fontSize="6" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
         HorizontalNumberSlider
         <a fontSize="2" href="#" onClick={() => updateValue([0, 0])} pX="2">
-          delete
+          to start
         </a>
         <div fontSize="4" mL="auto">
           from {price[0]} to {price[1]}
@@ -59,6 +59,12 @@ function B() {
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
+      <h1 fontSize="8" mB="4">
+        Playground
+      </h1>
+      <div fontSize="4" mB="8">
+        Miesto, kde na mieru vytvárame a testujeme znovu použiteľné komponenty.
+      </div>
       <A />
       <B />
     </div>
