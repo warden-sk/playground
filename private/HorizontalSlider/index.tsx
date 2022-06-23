@@ -138,7 +138,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
               const [translateX] = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
-              whereToGo[0] = readElementWidth(parentElement.current!) * 0.5;
+              whereToGo[0] = readElementWidth(parentElement.current!);
               whereToGo[1] = whereToGo[0];
 
               updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));
@@ -160,7 +160,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
               const [translateX] = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
-              whereToGo[0] = readElementWidth(parentElement.current!) * 0.5 * -1;
+              whereToGo[0] = readElementWidth(parentElement.current!) * -1;
               whereToGo[1] = whereToGo[0];
 
               updateState(state => ({ ...state, lastTranslateX: translateX, whereToGo }));

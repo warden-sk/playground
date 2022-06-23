@@ -17,9 +17,6 @@ function A() {
     <div mY="8">
       <h1 alignItems="center" display="flex" fontSize="6" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
         HorizontalNumberSlider
-        <a fontSize="2" href="#" onClick={() => updateValue([0, 0])} pX="2">
-          to start
-        </a>
         <div fontSize="4" mL="auto">
           from {price[0]} to {price[1]}
         </div>
