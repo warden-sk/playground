@@ -3,7 +3,7 @@
   --left\(size\): 1.5rem;
 
   --line\(color\): currentColor;
-  --line\(height\): var(--border-radius);
+  --line\(height\): var(--border-width);
 
   --right\(background-color\): var(--left\(background-color\));
 
