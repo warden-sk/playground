@@ -171,7 +171,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           />
         )}
       </div>
-      {hasPercentage && <Percentage mT="4" percentage={state.current.percentage} />}
+      {hasPercentage && <Percentage mT="8" percentage={state.current.percentage} />}
     </div>
   );
 }

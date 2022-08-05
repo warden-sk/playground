@@ -68,4 +68,4 @@ function Client() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('client')!).render(<Client />);
+export default Client

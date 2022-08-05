@@ -3,7 +3,7 @@
   --left\(size\): 1.5rem;
 
   --line\(color\): currentColor;
-  --line\(height\): var(--border-width);
+  --line\(height\): var(--border-radius);
 
   --right\(background-color\): var(--left\(background-color\));
 
@@ -13,7 +13,7 @@
 .horizontal-number-slider::after {
   background-color: var(--line\(color\));
   border-radius: calc(var(--line\(height\)) / 2);
-  content: "";
+  content: '';
   height: var(--line\(height\));
   opacity: 0.5;
   position: absolute;
