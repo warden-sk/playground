@@ -2,6 +2,7 @@
  * Copyright 2022 Marek Kobida
  */
 
+import './design.css';
 import './index.css';
 
 import React, { useState } from 'react';
@@ -26,14 +27,14 @@ function A() {
   );
 }
 
-function B() {
+function B({length}:{length:number}) {
   return (
     <div mY="8">
       <h1 fontSize="6" mB="4">
         HorizontalSlider
       </h1>
-      <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage>
-        {[...new Array(16)].map(() => (
+      <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage mX="!2">
+        {[...new Array(length)].map(() => (
           <a flex="none" href="https://google.sk" pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               alignItems="center"
@@ -41,9 +42,7 @@ function B() {
               justifyContent="center"
               style={{
                 aspectRatio: '1/1.5',
-                backgroundColor: 'hsl(0, 0%, 25%)',
-                borderRadius: '0.125rem',
-                boxShadow: '0 0 0.5rem rgba(0, 0, 0, 0.25)',
+                backgroundColor: 'hsl(0, 0%, 50%)',
               }}
             />
           </a>
@@ -56,16 +55,16 @@ function B() {
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
-      <h1 fontSize="8" mB="4">
+      <h1 fontSize="9" mB="4">
         Playground
       </h1>
-      <div fontSize="4" mB="8">
-        Miesto, kde na mieru vytvárame a testujeme znovu použiteľné komponenty.
+      <div fontSize="5" mB="8">
+        Miesto, kde na mieru vytváram a testujem znovu použiteľné komponenty.
       </div>
-      <A />
-      <B />
+      {/* <A /> */}
+      <B length={6} />
     </div>
   );
 }
 
-export default Client;
+ReactDOM.createRoot(document.getElementById('client')!).render(<Client />);
