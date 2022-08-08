@@ -38,3 +38,16 @@
   right: 0;
   top: 0;
 }
+@media (min-width: 80rem) {
+  .t-chevron-left,
+  .t-chevron-right {
+    background-color: transparent;
+    color: var(--t-chevron\(background-color\));
+  }
+  .t-chevron-left {
+    transform: translate(-125%, -50%);
+  }
+  .t-chevron-right {
+    transform: translate(125%, -50%);
+  }
+}
