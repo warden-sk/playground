@@ -9,11 +9,8 @@
 }
 .t-percentage {
   background-color: var(--t-percentage\(background-color\));
-  border-radius: calc(var(--t-percentage\(height\)) / 2);
   height: var(--t-percentage\(height\));
 }
-.t-percentage__div {
+.t-percentage > div {
   background-color: var(--t-percentage__div\(background-color\));
-  border-radius: inherit;
-  height: 100%;
 }

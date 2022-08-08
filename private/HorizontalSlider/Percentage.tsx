@@ -13,7 +13,7 @@ interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
 function Percentage({ className, percentage, ...$ }: P) {
   return (
     <div {...$} className={[className, 't-percentage']}>
-      <div className="t-percentage__div" style={{ width: `${percentage}%` }} />
+      <div height="100" style={{ width: `${percentage}%` }} />
     </div>
   );
 }
