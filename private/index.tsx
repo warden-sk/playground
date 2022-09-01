@@ -6,13 +6,12 @@ import './design.css';
 import './index.css';
 
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom/client';
 import HorizontalNumberSlider from './HorizontalNumberSlider';
 import HorizontalSlider from './HorizontalSlider';
-import ReactDOM from 'react-dom/client';
 
 function A() {
   const [price, updatePrice] = useState<[number, number]>([0, 0]);
-  const [value, updateValue] = useState<[number, number]>([43.75, 81.25]);
 
   return (
     <div mY="8">
@@ -22,12 +21,12 @@ function A() {
           from {price[0]} to {price[1]}
         </div>
       </h1>
-      <HorizontalNumberSlider onMove={updatePrice} size={[25, 100]} value={value} />
+      <HorizontalNumberSlider onMove={updatePrice} size={[25, 100]} value={[43.75, 81.25]} />
     </div>
   );
 }
 
-function B({length}:{length:number}) {
+function B({ length }: { length: number }) {
   return (
     <div mY="8">
       <h1 fontSize="6" mB="4">
@@ -55,13 +54,7 @@ function B({length}:{length:number}) {
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
-      <h1 fontSize="9" mB="4">
-        Playground
-      </h1>
-      <div fontSize="5" mB="8">
-        Miesto, kde na mieru vytváram a testujem znovu použiteľné komponenty.
-      </div>
-      {/* <A /> */}
+      <A />
       <B length={6} />
     </div>
   );
