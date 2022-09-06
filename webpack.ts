@@ -9,6 +9,7 @@ const compiler = webpack(
   common({
     htmlTemplate: () => '<div id="client"></div>',
     name: 'Playground',
+    publicPath: 'http://127.0.0.1',
   })
 );
 

@@ -55,7 +55,7 @@ function Client() {
   return (
     <div className="container" mX="auto" pX="4">
       <A />
-      <B length={6} />
+      {/* <B length={6} /> */}
     </div>
   );
 }

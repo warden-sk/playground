@@ -5,14 +5,11 @@
   --line\(color\): currentColor;
   --line\(height\): var(--border-width);
 
-  --right\(background-color\): var(--left\(background-color\));
-
   height: var(--left\(size\));
   position: relative;
 }
 .horizontal-number-slider::after {
   background-color: var(--line\(color\));
-  border-radius: calc(var(--line\(height\)) / 2);
   content: '';
   height: var(--line\(height\));
   opacity: 0.5;
@@ -32,8 +29,4 @@
   position: absolute;
   width: var(--left\(size\));
   z-index: 1;
-}
-/* (2) background-color */
-.horizontal-number-slider__right {
-  background-color: var(--right\(background-color\));
 }
