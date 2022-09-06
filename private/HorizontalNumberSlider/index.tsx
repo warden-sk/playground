@@ -5,146 +5,156 @@
 import './index.css';
 
 import React from 'react';
-import Translate from '../helpers/Translate';
 import readElementOffset from '../helpers/readElementOffset';
 import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
+import Translate from '../helpers/Translate';
 
 interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
-  value?: [left: number, right: number];
+  value: [left: number, right: number];
 }
 
 interface Storage {
   left: StorageElement;
   right: StorageElement;
-  size: [from: number, to: number];
 }
 
 interface StorageElement {
-  calculated: [number, number];
+  calculated: number;
   isMouseDown: boolean;
-  x: number;
+  startX: number;
 }
 
 function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attributes }: P) {
-  const [storage, updateStorage] = React.useState<Storage>({
-    left: { calculated: [0, 0], isMouseDown: false, x: 0 },
-    right: { calculated: [0, 0], isMouseDown: false, x: 0 },
-    size,
+  const leftElement = React.useRef<HTMLDivElement>(null);
+  const parentElement = React.useRef<HTMLDivElement>(null);
+  const rightElement = React.useRef<HTMLDivElement>(null);
+  const storage = React.useRef<Storage>({
+    left: { calculated: 0, isMouseDown: false, startX: 0 },
+    right: { calculated: 0, isMouseDown: false, startX: 0 },
   });
 
-  const elementStorage = {
-    left: React.useRef<HTMLDivElement>(null),
-    parent: React.useRef<HTMLDivElement>(null),
-    right: React.useRef<HTMLDivElement>(null),
-  } as const;
-
   function availableWidth(): number {
-    return readElementWidth(elementStorage.parent.current!) - readElementWidth(elementStorage.left.current!);
+    return readElementWidth(parentElement.current!) - readElementWidth(leftElement.current!);
   }
 
-  async function moveTo(which: 'left' | 'right', x: number) {
+  function moveTo(which: 'left' | 'right', x: number, isFirstMove = false) {
+    const enemy = which === 'left' ? rightElement : leftElement;
+
+    let leftBorder = 0,
+      rightBorder = availableWidth();
+
+    if (!isFirstMove) {
+      if (which === 'left') {
+        leftBorder = 0;
+        rightBorder = new Translate(enemy.current!).read()[0] - readElementWidth(enemy.current!);
+      } else {
+        leftBorder = new Translate(enemy.current!).read()[0] + readElementWidth(enemy.current!);
+        rightBorder = availableWidth();
+      }
+    }
+
     // >
-    x = x > 0 ? x : 0;
+    x = x > leftBorder ? x : leftBorder;
 
     // <
-    x = x < availableWidth() ? x : availableWidth();
+    x = x < rightBorder ? x : rightBorder;
 
     /* (1) */ translate(which).write(x);
 
-    /* (2) */ const updatedStorage = await updateStorageElement({ calculated: [x / availableWidth(), $$(x)] }, which);
+    /* (2) */ const updatedStorage = updateStorageElement({ calculated: $$(x) }, which);
 
-    /* (3) */ onMove?.([updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]]);
+    /* (3) */ onMove?.([updatedStorage.left.calculated, updatedStorage.right.calculated]);
   }
 
   function onMouseDown(which: 'left' | 'right') {
     return (event: React.MouseEvent | React.TouchEvent) => {
-      const [elementOffsetX] = readElementOffset(elementStorage.parent.current!);
+      const [elementOffsetX] = readElementOffset(parentElement.current!);
       const [mouseOffsetX] = readMouseOffset(event.nativeEvent);
       const [translateX] = translate(which).read();
 
-      updateStorageElement({ isMouseDown: true, x: mouseOffsetX - elementOffsetX - translateX }, which);
+      updateStorageElement({ isMouseDown: true, startX: mouseOffsetX - elementOffsetX - translateX }, which);
     };
   }
 
   function translate(which: 'left' | 'right'): Translate {
-    return new Translate(elementStorage[which].current!);
+    return new Translate(which === 'left' ? leftElement.current! : rightElement.current!);
   }
 
-  async function updateStorageElement(
-    storageElement: { [P in keyof StorageElement]?: StorageElement[P] },
+  function updateStorageElement(
+    storageElement: { [K in keyof Storage['left']]?: Storage['left'][K] },
     which: 'left' | 'right'
-  ): Promise<Storage> {
-    return new Promise(l =>
-      updateStorage(storage => {
-        const updatedStorage = { ...storage, [which]: { ...storage[which], ...storageElement } };
+  ): Storage {
+    storage.current = { ...storage.current, [which]: { ...storage.current[which], ...storageElement } };
 
-        l(updatedStorage);
-
-        return updatedStorage;
-      })
-    );
-  }
-
-  function whichIsDown(): 'left' | 'right' {
-    return storage.left.isMouseDown ? 'left' : storage.right.isMouseDown ? 'right' : 'left';
+    return storage.current;
   }
 
   /**
    * (1)
    */
   function $(x: number): number {
-    // (x / (size[0] + size[1])) * availableWidth();
+    console.log(x);
 
-    const _1 = x - storage.size[0]; //               81.25 - 25 = 56.25
+    const _1 = x - size[0]; //       81.25 - 25 = 56.25
 
-    const _2 = storage.size[1] - storage.size[0]; // 100   - 25 = 75
+    const _2 = size[1] - size[0]; // 100   - 25 = 75
 
-    const _3 = _1 / _2; //                           56.25 / 75 = 0.75
+    const _3 = _1 / _2; //           56.25 / 75 = 0.75
 
     return _3 * availableWidth();
   }
+
   /**
    * (2)
    */
   function $$(x: number): number {
-    return +(storage.size[0] + (x / availableWidth()) * (storage.size[1] - storage.size[0])).toFixed();
+    const _1 = size[0];
+
+    const _2 = x / availableWidth();
+
+    const _3 = size[1] - size[0];
+
+    return _1 + _2 * _3;
   }
 
   React.useEffect(() => {
-    moveTo('left', $(value?.[0] ?? storage.size[0]));
-    moveTo('right', $(value?.[1] ?? storage.size[1]));
-  }, [value]);
+    moveTo('left', $(value[0]), true);
+    moveTo('right', $(value[1]), true);
+  }, []);
 
   React.useEffect(() => {
     function onMouseMove(event: MouseEvent | TouchEvent) {
       const which = whichIsDown();
 
-      if (storage[which].isMouseDown) {
-        const [elementOffsetX] = readElementOffset(elementStorage.parent.current!);
+      if (which && storage.current[which].isMouseDown) {
+        const [elementOffsetX] = readElementOffset(parentElement.current!);
         const [mouseOffsetX] = readMouseOffset(event);
 
-        moveTo(which, mouseOffsetX - elementOffsetX - storage[which].x);
+        moveTo(which, mouseOffsetX - elementOffsetX - storage.current[which].startX);
       }
     }
 
-    async function onMouseUp() {
+    function onMouseUp() {
       const which = whichIsDown();
 
-      if (storage[which].isMouseDown) {
-        const updatedStorage = await updateStorageElement({ isMouseDown: false }, which);
+      if (which && storage.current[which].isMouseDown) {
+        const updatedStorage = updateStorageElement({ isMouseDown: false }, which);
 
-        onUp?.([updatedStorage.left.calculated[1], updatedStorage.right.calculated[1]]);
+        onUp?.([updatedStorage.left.calculated, updatedStorage.right.calculated]);
       }
     }
 
     function onTest() {
-      moveTo('left', availableWidth() * storage.left.calculated[0]);
+      moveTo('left', $(storage.current.left.calculated), true);
+      moveTo('right', $(storage.current.right.calculated), true);
+    }
 
-      moveTo('right', availableWidth() * storage.right.calculated[0]);
+    function whichIsDown(): 'left' | 'right' | undefined {
+      return storage.current.left.isMouseDown ? 'left' : storage.current.right.isMouseDown ? 'right' : undefined;
     }
 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
@@ -158,21 +168,21 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
 
       window.removeEventListener('resize', onTest);
     };
-  }, [storage]);
+  }, []);
 
   return (
-    <div {...attributes} className={[className, 'horizontal-number-slider']} ref={elementStorage.parent}>
+    <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>
       <div
         className="horizontal-number-slider__left"
         onMouseDown={onMouseDown('left')}
         onTouchStart={onMouseDown('left')}
-        ref={elementStorage.left}
+        ref={leftElement}
       />
       <div
         className="horizontal-number-slider__right"
         onMouseDown={onMouseDown('right')}
         onTouchStart={onMouseDown('right')}
-        ref={elementStorage.right}
+        ref={rightElement}
       />
     </div>
   );
