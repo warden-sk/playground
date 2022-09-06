@@ -60,6 +60,7 @@ function Client() {
     <div className="container" mX="auto" pX="4">
       <A />
       <B length={6} />
+      <div>Aktualizácia: 6. septembra o 06:38</div>
     </div>
   );
 }
