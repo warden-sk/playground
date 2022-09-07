@@ -13,18 +13,17 @@ import HorizontalSlider from './HorizontalSlider';
 function A() {
   const [price, updatePrice] = useState<[number, number]>([0, 0]);
 
-  function $(price: number): string {
-    return price.toFixed();
-  }
-
   return (
     <div mY="8">
-      <h1 alignItems="center" display="flex" fontSize="6" mB="4" style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
-        HorizontalNumberSlider
-        <div fontSize="4" mL="auto">
-          from {$(price[0])} to {$(price[1])}
+      <h1 fontSize="8">HorizontalNumberSlider</h1>
+      <div display="flex" justifyContent="space-between" mY="4">
+        <div>
+          od <span fontWeight="600">{price[0]} €</span>
         </div>
-      </h1>
+        <div>
+          do <span fontWeight="600">{price[1]} €</span>
+        </div>
+      </div>
       <HorizontalNumberSlider onMove={updatePrice} size={[25, 100]} value={[43.75, 81.25]} />
     </div>
   );
@@ -59,8 +58,7 @@ function Client() {
   return (
     <div className="container" mX="auto" pX="4">
       <A />
-      <B length={6} />
-      <div>Aktualizácia: 6. septembra o 06:38</div>
+      {/* <B length={6} /> */}
     </div>
   );
 }

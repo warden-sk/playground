@@ -2,8 +2,8 @@
   --left\(background-color\): #fff;
   --left\(size\): 1.5rem;
 
-  --line\(color\): currentColor;
-  --line\(height\): var(--border-width);
+  --line\(color\): #f00;
+  --line\(height\): calc(var(--border-width) * 2);
 
   height: var(--left\(size\));
   position: relative;
@@ -18,7 +18,6 @@
   transform: translateY(-50%);
   width: 100%;
 }
-/* (1) */
 .horizontal-number-slider__left,
 .horizontal-number-slider__right {
   background-color: var(--left\(background-color\));

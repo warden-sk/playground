@@ -1,7 +1,4 @@
-:root {
-  --border-width: 0.0625rem;
-}
 body {
-  background-color: hsl(0, 0%, 12.5%);
-  color: hsl(0, 0%, 87.5%);
+  background-color: hsl(0, 0%, 87.5%);
+  color: hsl(0, 0%, 12.5%);
 }
