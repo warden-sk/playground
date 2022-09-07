@@ -33,8 +33,8 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
   const parentElement = React.useRef<HTMLDivElement>(null);
   const rightElement = React.useRef<HTMLDivElement>(null);
   const storage = React.useRef<Storage>({
-    left: { calculated: value[0], isMouseDown: false, startX: 0 },
-    right: { calculated: value[1], isMouseDown: false, startX: 0 },
+    left: { calculated: 0, isMouseDown: false, startX: 0 },
+    right: { calculated: 0, isMouseDown: false, startX: 0 },
   });
 
   function availableWidth(): number {
@@ -136,8 +136,8 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
     }
 
     function onTest() {
-      moveTo('left', $(storage.current.left.calculated), true);
-      moveTo('right', $(storage.current.right.calculated), true);
+      moveTo('left', $(storage.current.left.calculated ||value[0]), true);
+      moveTo('right', $(storage.current.right.calculated || value[1]), true);
     }
 
     function whichIsDown(): 'left' | 'right' | undefined {
@@ -157,7 +157,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
 
       window.removeEventListener('resize', onTest);
     };
-  }, []);
+  }, [size]);
 
   return (
     <div {...attributes} className={[className, 'horizontal-number-slider']} ref={parentElement}>

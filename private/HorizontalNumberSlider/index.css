@@ -2,7 +2,7 @@
   --left\(background-color\): #fff;
   --left\(size\): 1.5rem;
 
-  --line\(color\): #f00;
+  --line\(color\): #000;
   --line\(height\): calc(var(--border-width) * 2);
 
   height: var(--left\(size\));
