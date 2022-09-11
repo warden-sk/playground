@@ -1,11 +1,11 @@
 .horizontal-number-slider {
-  --left\(background-color\): #fff;
-  --left\(size\): 1.5rem;
+  --slider\(background-color\): #fff;
+  --slider\(size\): 1.5rem;
 
   --line\(color\): #000;
   --line\(height\): calc(var(--border-width) * 2);
 
-  height: var(--left\(size\));
+  height: var(--slider\(size\));
   position: relative;
 }
 .horizontal-number-slider::after {
@@ -18,14 +18,13 @@
   transform: translateY(-50%);
   width: 100%;
 }
-.horizontal-number-slider__left,
-.horizontal-number-slider__right {
-  background-color: var(--left\(background-color\));
+.horizontal-number-slider__slider {
+  background-color: var(--slider\(background-color\));
   border: var(--line\(height\)) solid var(--line\(color\));
   border-radius: 50%;
   cursor: pointer;
-  height: var(--left\(size\));
+  height: var(--slider\(size\));
   position: absolute;
-  width: var(--left\(size\));
+  width: var(--slider\(size\));
   z-index: 1;
 }
