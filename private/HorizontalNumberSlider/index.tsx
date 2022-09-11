@@ -30,14 +30,13 @@ interface StorageElement {
 
 function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attributes }: P) {
   const storage = React.useRef<Storage>({
-    left: { calculated: 0, isMouseDown: false, startX: 0 },
-    right: { calculated: 0, isMouseDown: false, startX: 0 },
-  });
-
-  const elementStorage = {
-    left: React.useRef<HTMLDivElement>(null),
-    right: React.useRef<HTMLDivElement>(null),
-  };
+      left: { calculated: 0, isMouseDown: false, startX: 0 },
+      right: { calculated: 0, isMouseDown: false, startX: 0 },
+    }),
+    elementStorage = {
+      left: React.useRef<HTMLDivElement>(null),
+      right: React.useRef<HTMLDivElement>(null),
+    };
 
   function availableWidth(): number {
     const parentElement = elementStorage.left.current!.parentElement!;
