@@ -11,7 +11,8 @@ import HorizontalNumberSlider from './HorizontalNumberSlider';
 import HorizontalSlider from './HorizontalSlider';
 
 function A() {
-  const [price, updatePrice] = useState<[number, number]>([0, 0]);
+  const [price, updatePrice] = useState<[number, number]>([43.75, 81.25]);
+  const [size] = useState<[number, number]>([25, 100]);
 
   return (
     <div mY="8">
@@ -24,7 +25,7 @@ function A() {
           do <span fontWeight="600">{price[1]} €</span>
         </div>
       </div>
-      <HorizontalNumberSlider onMove={updatePrice} size={[25, 100]} value={[43.75, 81.25]} />
+      <HorizontalNumberSlider onMove={updatePrice} onUp={updatePrice} size={size} value={price} />
     </div>
   );
 }

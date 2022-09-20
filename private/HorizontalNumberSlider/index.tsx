@@ -28,11 +28,12 @@ interface StorageElement {
   startX: number;
 }
 
-function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attributes }: P) {
+function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, ...attributes }: P) {
   const storage = React.useRef<Storage>({
       left: { calculated: 0, isMouseDown: false, startX: 0 },
       right: { calculated: 0, isMouseDown: false, startX: 0 },
     }),
+    size = React.useRef<[from: number, to: number]>($size),
     elementStorage = {
       left: React.useRef<HTMLDivElement>(null),
       right: React.useRef<HTMLDivElement>(null),
@@ -68,11 +69,11 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
 
     /* (1) */ new Translate(which === 'left' ? elementStorage.left.current! : elementStorage.right.current!).write(x);
 
-    const _1 = size[0];
+    const _1 = size.current[0];
 
     const _2 = x / availableWidth();
 
-    const _3 = size[1] - size[0];
+    const _3 = size.current[1] - size.current[0];
 
     const enhancedX = _1 + _2 * _3;
 
@@ -94,20 +95,37 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
     };
   }
 
+  function onTest() {
+    moveTo('left', $(storage.current.left.calculated || value[0]), true);
+    moveTo('right', $(storage.current.right.calculated || value[1]), true);
+  }
+
   /**
    * (1)
    */
   function $(x: number): number {
-    const _1 = x - size[0]; //       81.25 - 25 = 56.25
+    const _1 = x - size.current[0]; //       81.25 - 25 = 56.25
 
-    const _2 = size[1] - size[0]; // 100   - 25 = 75
+    const _2 = size.current[1] - size.current[0]; // 100   - 25 = 75
 
     const _3 = _1 / _2; //           56.25 / 75 = 0.75
 
     return _3 * availableWidth();
   }
 
-  React.useEffect(() => {
+  const firstUpdate = React.useRef(true);
+  React.useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    size.current = $size;
+
+    onTest();
+  }, [$size]);
+
+  React.useLayoutEffect(() => {
     function onMouseMove(event: MouseEvent | TouchEvent) {
       const which = whichIsDown();
 
@@ -129,11 +147,6 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...attri
 
         onUp?.([storage.current.left.calculated, storage.current.right.calculated]);
       }
-    }
-
-    function onTest() {
-      moveTo('left', $(storage.current.left.calculated || value[0]), true);
-      moveTo('right', $(storage.current.right.calculated || value[1]), true);
     }
 
     function whichIsDown(): keyof Storage | undefined {
