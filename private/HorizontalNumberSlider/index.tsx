@@ -77,7 +77,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
 
     const enhancedX = _1 + _2 * _3;
 
-    /* (2) */ storage.current[which] = { ...storage.current[which], calculated: enhancedX };
+    /* (2) */ storage.current[which] = { ...storage.current[which], calculated: +enhancedX.toFixed(3) };
 
     /* (3) */ onMove?.([storage.current.left.calculated, storage.current.right.calculated]);
   }
@@ -95,20 +95,17 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
     };
   }
 
-  function onTest() {
+  function update() {
     moveTo('left', $(storage.current.left.calculated || value[0]), true);
     moveTo('right', $(storage.current.right.calculated || value[1]), true);
   }
 
-  /**
-   * (1)
-   */
   function $(x: number): number {
-    const _1 = x - size.current[0]; //       81.25 - 25 = 56.25
+    const _1 = x - size.current[0]; // 81.25 - 25 = 56.25
 
-    const _2 = size.current[1] - size.current[0]; // 100   - 25 = 75
+    const _2 = size.current[1] - size.current[0]; // 100 - 25 = 75
 
-    const _3 = _1 / _2; //           56.25 / 75 = 0.75
+    const _3 = _1 / _2; // 56.25 / 75 = 0.75
 
     return _3 * availableWidth();
   }
@@ -117,12 +114,13 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
   React.useLayoutEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
+
       return;
     }
 
     size.current = $size;
 
-    onTest();
+    update();
   }, [$size]);
 
   React.useLayoutEffect(() => {
@@ -143,51 +141,61 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
       const which = whichIsDown();
 
       if (which && storage.current[which].isMouseDown) {
-        storage.current[which] = { ...storage.current[which], isMouseDown: false };
+        storage.current[which] = { ...storage.current[which], isMouseDown: false, startX: 0 };
 
         onUp?.([storage.current.left.calculated, storage.current.right.calculated]);
       }
     }
 
     function whichIsDown(): keyof Storage | undefined {
-      for (const l in storage.current) {
-        const k = l as keyof Storage;
-
-        const r = storage.current[k];
-
-        if (r.isMouseDown) {
-          return k;
-        }
-      }
+      return storage.current.left.isMouseDown ? 'left' : storage.current.right.isMouseDown ? 'right' : undefined;
     }
 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
     (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
 
-    window.addEventListener('resize', onTest);
+    window.addEventListener('resize', update);
 
-    onTest();
+    update();
 
     return () => {
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
 
-      window.removeEventListener('resize', onTest);
+      window.removeEventListener('resize', update);
     };
   }, []);
 
   return (
-    <div {...attributes} className={[className, 'horizontal-number-slider']}>
-      {(['left', 'right'] as const).map(id => (
-        <div
-          className="horizontal-number-slider__slider"
-          key={id}
-          onMouseDown={onMouseDown(id)}
-          onTouchStart={onMouseDown(id)}
-          ref={elementStorage[id]}
-        />
-      ))}
-    </div>
+    <>
+      <table>
+        {(['left', 'right'] as const).map(id => (
+          <tr>
+            <td fontWeight="600">{id}</td>
+            {(['calculated', 'isMouseDown', 'startX'] as const).map(id2 => (
+              <td>{storage.current[id][id2].toString()}</td>
+            ))}
+          </tr>
+        ))}
+        <tr>
+          <td fontWeight="600">size</td>
+          {size.current.map(id => (
+            <td>{id}</td>
+          ))}
+        </tr>
+      </table>
+      <div {...attributes} className={[className, 'horizontal-number-slider']}>
+        {(['left', 'right'] as const).map(id => (
+          <div
+            className="horizontal-number-slider__slider"
+            key={id}
+            onMouseDown={onMouseDown(id)}
+            onTouchStart={onMouseDown(id)}
+            ref={elementStorage[id]}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 

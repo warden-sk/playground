@@ -2,6 +2,36 @@
   background-color: hsl(0, 0%, 87.5%);
   color: hsl(0, 0%, 12.5%);
 }
+.horizontal-number-slider {
+  --slider\(background-color\): #fff;
+  --slider\(size\): 1.5rem;
+
+  --line\(color\): #000;
+  --line\(height\): calc(var(--border-width) * 2);
+
+  height: var(--slider\(size\));
+  position: relative;
+}
+.horizontal-number-slider::after {
+  background-color: var(--line\(color\));
+  content: '';
+  height: var(--line\(height\));
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+.horizontal-number-slider__slider {
+  background-color: var(--slider\(background-color\));
+  border: var(--line\(height\)) solid var(--line\(color\));
+  border-radius: 50%;
+  cursor: pointer;
+  height: var(--slider\(size\));
+  position: absolute;
+  width: var(--slider\(size\));
+  z-index: 1;
+}
 /*
  * Copyright 2022 Marek Kobida
  */
@@ -60,34 +90,4 @@
 }
 .t-percentage > div {
   background-color: var(--t-percentage__div\(background-color\));
-}
-.horizontal-number-slider {
-  --slider\(background-color\): #fff;
-  --slider\(size\): 1.5rem;
-
-  --line\(color\): #000;
-  --line\(height\): calc(var(--border-width) * 2);
-
-  height: var(--slider\(size\));
-  position: relative;
-}
-.horizontal-number-slider::after {
-  background-color: var(--line\(color\));
-  content: '';
-  height: var(--line\(height\));
-  opacity: 0.5;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
-}
-.horizontal-number-slider__slider {
-  background-color: var(--slider\(background-color\));
-  border: var(--line\(height\)) solid var(--line\(color\));
-  border-radius: 50%;
-  cursor: pointer;
-  height: var(--slider\(size\));
-  position: absolute;
-  width: var(--slider\(size\));
-  z-index: 1;
 }

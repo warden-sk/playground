@@ -12,11 +12,12 @@ import HorizontalSlider from './HorizontalSlider';
 
 function A() {
   const [price, updatePrice] = useState<[number, number]>([43.75, 81.25]);
-  const [size] = useState<[number, number]>([25, 100]);
+  const [size, updateSize] = useState<[number, number]>([25, 100]);
 
   return (
     <div mY="8">
       <h1 fontSize="8">HorizontalNumberSlider</h1>
+      <div onClick={() => updateSize([0, 50])}>zmeniť veľkosť</div>
       <div display="flex" justifyContent="space-between" mY="4">
         <div>
           od <span fontWeight="600">{price[0]} €</span>
