@@ -167,35 +167,17 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
   }, []);
 
   return (
-    <>
-      <table>
-        {(['left', 'right'] as const).map(id => (
-          <tr>
-            <td fontWeight="600">{id}</td>
-            {(['calculated', 'isMouseDown', 'startX'] as const).map(id2 => (
-              <td>{storage.current[id][id2].toString()}</td>
-            ))}
-          </tr>
-        ))}
-        <tr>
-          <td fontWeight="600">size</td>
-          {size.current.map(id => (
-            <td>{id}</td>
-          ))}
-        </tr>
-      </table>
-      <div {...attributes} className={[className, 'horizontal-number-slider']}>
-        {(['left', 'right'] as const).map(id => (
-          <div
-            className="horizontal-number-slider__slider"
-            key={id}
-            onMouseDown={onMouseDown(id)}
-            onTouchStart={onMouseDown(id)}
-            ref={elementStorage[id]}
-          />
-        ))}
-      </div>
-    </>
+    <div {...attributes} className={[className, 'horizontal-number-slider']}>
+      {(['left', 'right'] as const).map(id => (
+        <div
+          className="horizontal-number-slider__slider"
+          key={id}
+          onMouseDown={onMouseDown(id)}
+          onTouchStart={onMouseDown(id)}
+          ref={elementStorage[id]}
+        />
+      ))}
+    </div>
   );
 }
 
