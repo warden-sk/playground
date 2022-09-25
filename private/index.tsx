@@ -36,7 +36,7 @@ function HorizontalSlider({ length }: { length: number }) {
     <div mY="8">
       <h2 fontSize="8">HorizontalSlider</h2>
       <HorizontalSliderComponent alignItems="center" chevronSize={48} display="flex" hasPercentage mX="!2">
-        {[...new Array(length)].map(($,i) => (
+        {[...new Array(length)].map(($, i) => (
           <a flex="none" href={`#${i}`} pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               alignItems="center"
@@ -57,7 +57,9 @@ function HorizontalSlider({ length }: { length: number }) {
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
-      <h1 fontSize="8" mY="8">Playground</h1>
+      <h1 fontSize="8" mY="8">
+        Playground
+      </h1>
       <HorizontalNumberSlider />
       <HorizontalSlider length={6} />
     </div>

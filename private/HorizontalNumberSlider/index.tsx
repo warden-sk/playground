@@ -149,15 +149,15 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...$ }: 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
     (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
 
-    function onResize () {
-      update(storage.current,value)
+    function onResize() {
+      update(storage.current, value);
     }
 
     window.addEventListener('resize', onResize);
 
     //------------------------------------------------------------------------------------------------------------------
 
-    update(storage.current,value)
+    update(storage.current, value);
 
     return () => {
       console.log('HorizontalNumberSlider \u2014 end');

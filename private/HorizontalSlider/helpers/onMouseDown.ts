@@ -9,7 +9,7 @@ function onMouseDown(state: () => State, updateState: (on: (state: State) => Sta
   return (event: MouseEvent | TouchEvent) => {
     cancelAnimationFrame(state().idOfInertia);
 
-    const {x:translateX} = state().translate().read();
+    const { x: translateX } = state().translate().read();
 
     updateState(state => ({
       ...state,

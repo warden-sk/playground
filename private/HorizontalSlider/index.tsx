@@ -100,7 +100,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     (['mouseup', 'touchend'] as const).forEach(type => parentElement.current!.addEventListener(type, onMouseUp2));
 
     new ResizeObserver(() => {
-      const {x:translateX} = state.current.translate().read();
+      const { x: translateX } = state.current.translate().read();
 
       const percentage = ((translateX * -1) / state.current.width) * 100;
 
@@ -135,7 +135,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronLeft
             className="t-chevron-left"
             onClick={() => {
-              const {x:translateX} = state.current.translate().read();
+              const { x: translateX } = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = readElementWidth(parentElement.current!);
@@ -157,7 +157,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronRight
             className="t-chevron-right"
             onClick={() => {
-              const {x:translateX} = state.current.translate().read();
+              const { x: translateX } = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = readElementWidth(parentElement.current!) * -1;
