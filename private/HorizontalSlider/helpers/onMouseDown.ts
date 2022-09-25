@@ -2,14 +2,14 @@
  * Copyright 2022 Marek Kobida
  */
 
-import type { State } from '../index';
 import readMouseOffset from '../../helpers/readMouseOffset';
+import type { State } from '../index';
 
 function onMouseDown(state: () => State, updateState: (on: (state: State) => State) => void) {
   return (event: MouseEvent | TouchEvent) => {
     cancelAnimationFrame(state().idOfInertia);
 
-    const [translateX] = state().translate().read();
+    const {x:translateX} = state().translate().read();
 
     updateState(state => ({
       ...state,

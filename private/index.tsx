@@ -7,18 +7,18 @@ import './index.css';
 
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import HorizontalNumberSlider from './HorizontalNumberSlider';
-import HorizontalSlider from './HorizontalSlider';
+import HorizontalNumberSliderComponent from './HorizontalNumberSlider';
+import HorizontalSliderComponent from './HorizontalSlider';
 
-function A() {
+function HorizontalNumberSlider() {
   const [price, updatePrice] = useState<[number, number]>([43.75, 81.25]);
   const [size, updateSize] = useState<[number, number]>([25, 100]);
 
   return (
     <div mY="8">
-      <h1 fontSize="8">HorizontalNumberSlider</h1>
+      <h2 fontSize="8">HorizontalNumberSlider</h2>
       <div onClick={() => updateSize([0, 50])}>zmeniť veľkosť</div>
-      <div display="flex" justifyContent="space-between" mY="4">
+      <div display="flex" justifyContent="space-between">
         <div>
           od <span fontWeight="600">{price[0]} €</span>
         </div>
@@ -26,20 +26,18 @@ function A() {
           do <span fontWeight="600">{price[1]} €</span>
         </div>
       </div>
-      <HorizontalNumberSlider onMove={updatePrice} onUp={updatePrice} size={size} value={price} />
+      <HorizontalNumberSliderComponent onMove={updatePrice} onUp={updatePrice} size={size} value={price} />
     </div>
   );
 }
 
-function B({ length }: { length: number }) {
+function HorizontalSlider({ length }: { length: number }) {
   return (
     <div mY="8">
-      <h1 fontSize="6" mB="4">
-        HorizontalSlider
-      </h1>
-      <HorizontalSlider alignItems="center" chevronSize={48} display="flex" hasPercentage mX="!2">
-        {[...new Array(length)].map(() => (
-          <a flex="none" href="https://google.sk" pX="2" width={['6/12', { '#': '4/12' }]}>
+      <h2 fontSize="8">HorizontalSlider</h2>
+      <HorizontalSliderComponent alignItems="center" chevronSize={48} display="flex" hasPercentage mX="!2">
+        {[...new Array(length)].map(($,i) => (
+          <a flex="none" href={`#${i}`} pX="2" width={['6/12', { '#': '4/12' }]}>
             <div
               alignItems="center"
               display="flex"
@@ -51,7 +49,7 @@ function B({ length }: { length: number }) {
             />
           </a>
         ))}
-      </HorizontalSlider>
+      </HorizontalSliderComponent>
     </div>
   );
 }
@@ -59,8 +57,9 @@ function B({ length }: { length: number }) {
 function Client() {
   return (
     <div className="container" mX="auto" pX="4">
-      <A />
-      {/* <B length={6} /> */}
+      <h1 fontSize="8" mY="8">Playground</h1>
+      <HorizontalNumberSlider />
+      <HorizontalSlider length={6} />
     </div>
   );
 }

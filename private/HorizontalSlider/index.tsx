@@ -5,15 +5,15 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
-import Percentage from './Percentage';
 import React from 'react';
+import readElementWidth from '../helpers/readElementWidth';
 import Translate from '../helpers/Translate';
 import inertia from './helpers/inertia';
 import onMouseDown from './helpers/onMouseDown';
 import onMouseLeave from './helpers/onMouseLeave';
 import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
-import readElementWidth from '../helpers/readElementWidth';
+import Percentage from './Percentage';
 
 interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
   chevronSize?: number;
@@ -100,7 +100,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     (['mouseup', 'touchend'] as const).forEach(type => parentElement.current!.addEventListener(type, onMouseUp2));
 
     new ResizeObserver(() => {
-      const [translateX] = state.current.translate().read();
+      const {x:translateX} = state.current.translate().read();
 
       const percentage = ((translateX * -1) / state.current.width) * 100;
 
@@ -135,7 +135,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronLeft
             className="t-chevron-left"
             onClick={() => {
-              const [translateX] = state.current.translate().read();
+              const {x:translateX} = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = readElementWidth(parentElement.current!);
@@ -157,7 +157,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
           <ChevronRight
             className="t-chevron-right"
             onClick={() => {
-              const [translateX] = state.current.translate().read();
+              const {x:translateX} = state.current.translate().read();
 
               const whereToGo: [number, number] = [0, 0];
               whereToGo[0] = readElementWidth(parentElement.current!) * -1;

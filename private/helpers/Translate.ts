@@ -9,12 +9,12 @@ class Translate {
     this.#element = element;
   }
 
-  read(): [x: number, y: number] {
+  read(): { x: number; y: number } {
     const style = window.getComputedStyle(this.#element);
 
     const matrix = new WebKitCSSMatrix(style.transform);
 
-    return [matrix.m41, matrix.m42];
+    return { x: matrix.m41, y: matrix.m42 };
   }
 
   write(x: number, y = 0): string {

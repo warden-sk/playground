@@ -28,36 +28,39 @@ interface StorageElement {
   startX: number;
 }
 
-function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, ...attributes }: P) {
+function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...$ }: P) {
+  const elementStorage = {
+    left: React.useRef<HTMLDivElement>(null),
+    parent: React.useRef<HTMLDivElement>(null),
+    right: React.useRef<HTMLDivElement>(null),
+  };
+
+  const leftElement = () => elementStorage.left.current!;
+  const parentElement = () => elementStorage.parent.current!;
+  const rightElement = () => elementStorage.right.current!;
+
+  //--------------------------------------------------------------------------------------------------------------------
+
   const storage = React.useRef<Storage>({
-      left: { calculated: 0, isMouseDown: false, startX: 0 },
-      right: { calculated: 0, isMouseDown: false, startX: 0 },
-    }),
-    size = React.useRef<[from: number, to: number]>($size),
-    elementStorage = {
-      left: React.useRef<HTMLDivElement>(null),
-      right: React.useRef<HTMLDivElement>(null),
-    };
+    left: { calculated: 0, isMouseDown: false, startX: 0 },
+    right: { calculated: 0, isMouseDown: false, startX: 0 },
+  });
 
   function availableWidth(): number {
-    const parentElement = elementStorage.left.current!.parentElement!;
-
-    return readElementWidth(parentElement) - readElementWidth(elementStorage.left.current!);
+    return readElementWidth(parentElement()) - readElementWidth(leftElement());
   }
 
-  function moveTo(which: keyof Storage, x: number, isFirstMove = false) {
+  function moveTo(which: 'left' | 'right', x: number, isFirstMove = false) {
     let leftBorder = 0,
       rightBorder = availableWidth();
 
     if (!isFirstMove) {
       if (which === 'left') {
-        rightBorder =
-          new Translate(elementStorage.right.current!).read()[0] - readElementWidth(elementStorage.right.current!);
+        rightBorder = new Translate(rightElement()).read().x - readElementWidth(rightElement());
       }
 
       if (which === 'right') {
-        leftBorder =
-          new Translate(elementStorage.left.current!).read()[0] + readElementWidth(elementStorage.left.current!);
+        leftBorder = new Translate(leftElement()).read().x + readElementWidth(leftElement());
       }
     }
 
@@ -67,24 +70,27 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
     // <
     x = x < rightBorder ? x : rightBorder;
 
-    /* (1) */ new Translate(which === 'left' ? elementStorage.left.current! : elementStorage.right.current!).write(x);
+    /* (1) */ new Translate(which === 'left' ? leftElement() : rightElement()).write(x);
 
-    const _1 = size.current[0];
+    const _1 = size[0];
 
     const _2 = x / availableWidth();
 
-    const _3 = size.current[1] - size.current[0];
+    const _3 = size[1] - size[0];
 
     const enhancedX = _1 + _2 * _3;
 
-    /* (2) */ storage.current[which] = { ...storage.current[which], calculated: +enhancedX.toFixed(3) };
+    /* (2) */ storage.current[which] = {
+      ...storage.current[which],
+      calculated: +enhancedX.toFixed(3),
+    };
 
     /* (3) */ onMove?.([storage.current.left.calculated, storage.current.right.calculated]);
   }
 
-  function onMouseDown(which: keyof Storage) {
+  function onMouseDown(which: 'left' | 'right') {
     return (event: React.MouseEvent | React.TouchEvent) => {
-      const element = which === 'left' ? elementStorage.left.current! : elementStorage.right.current!;
+      const element = which === 'left' ? leftElement() : rightElement();
 
       const [elementOffsetX] = readElementOffset(element);
       const [mouseOffsetX] = readMouseOffset(event.nativeEvent);
@@ -95,42 +101,31 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
     };
   }
 
-  function update() {
-    moveTo('left', $(storage.current.left.calculated || value[0]), true);
-    moveTo('right', $(storage.current.right.calculated || value[1]), true);
-  }
+  function update(storage: Storage, value: [left: number, right: number]) {
+    console.log('HorizontalNumberSlider \u2014 update');
 
-  function $(x: number): number {
-    const _1 = x - size.current[0]; // 81.25 - 25 = 56.25
+    function fromCalculated(x: number): number {
+      const _1 = x - size[0]; // 81.25 - 25 = 56.25
 
-    const _2 = size.current[1] - size.current[0]; // 100 - 25 = 75
+      const _2 = size[1] - size[0]; // 100 - 25 = 75
 
-    const _3 = _1 / _2; // 56.25 / 75 = 0.75
+      const _3 = _1 / _2; // 56.25 / 75 = 0.75
 
-    return _3 * availableWidth();
-  }
-
-  const firstUpdate = React.useRef(true);
-  React.useLayoutEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-
-      return;
+      return _3 * availableWidth();
     }
 
-    size.current = $size;
-
-    update();
-  }, [$size]);
+    moveTo('left', fromCalculated(storage.left.calculated || value[0]), true);
+    moveTo('right', fromCalculated(storage.right.calculated || value[1]), true);
+  }
 
   React.useLayoutEffect(() => {
+    console.log('HorizontalNumberSlider \u2014 start');
+
     function onMouseMove(event: MouseEvent | TouchEvent) {
       const which = whichIsDown();
 
       if (which && storage.current[which].isMouseDown) {
-        const parentElement = elementStorage.left.current!.parentElement!;
-
-        const [elementOffsetX] = readElementOffset(parentElement);
+        const [elementOffsetX] = readElementOffset(parentElement());
         const [mouseOffsetX] = readMouseOffset(event);
 
         moveTo(which, mouseOffsetX - elementOffsetX - storage.current[which].startX);
@@ -147,30 +142,38 @@ function HorizontalNumberSlider({ className, onMove, onUp, size: $size, value, .
       }
     }
 
-    function whichIsDown(): keyof Storage | undefined {
+    function whichIsDown(): 'left' | 'right' | undefined {
       return storage.current.left.isMouseDown ? 'left' : storage.current.right.isMouseDown ? 'right' : undefined;
     }
 
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
     (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
 
-    window.addEventListener('resize', update);
+    function onResize () {
+      update(storage.current,value)
+    }
 
-    update();
+    window.addEventListener('resize', onResize);
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    update(storage.current,value)
 
     return () => {
+      console.log('HorizontalNumberSlider \u2014 end');
+
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
 
-      window.removeEventListener('resize', update);
+      window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [`${size}`]);
 
   return (
-    <div {...attributes} className={[className, 'horizontal-number-slider']}>
+    <div {...$} className={[className, 'HorizontalNumberSlider']} ref={elementStorage.parent}>
       {(['left', 'right'] as const).map(id => (
         <div
-          className="horizontal-number-slider__slider"
+          className="HorizontalNumberSlider__slider"
           key={id}
           onMouseDown={onMouseDown(id)}
           onTouchStart={onMouseDown(id)}

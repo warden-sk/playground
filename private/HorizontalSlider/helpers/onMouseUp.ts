@@ -11,7 +11,7 @@ function onMouseUp(state: () => State, updateState: (on: (state: State) => State
 
     state().isMoving(false);
 
-    const [translateX] = state().translate().read();
+    const {x:translateX} = state().translate().read();
 
     const whereToGo: [number, number] = [0, 0];
     whereToGo[0] = (translateX - state().lastTranslateX) * 2;
