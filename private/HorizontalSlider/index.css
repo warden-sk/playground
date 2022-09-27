@@ -9,9 +9,6 @@
 .t {
   position: relative;
 }
-.t > div > div {
-  will-change: transform;
-}
 .t-chevron-left,
 .t-chevron-right {
   background-color: var(--t-chevron\(background-color\));
