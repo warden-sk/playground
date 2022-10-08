@@ -10,10 +10,11 @@ import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
 import Translate from '../helpers/Translate';
 
-interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedJSXElement<'div'> {
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
+  test: any[];
   value: [left: number, right: number];
 }
 
@@ -28,7 +29,7 @@ interface StorageElement {
   startX: number;
 }
 
-function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...$ }: P) {
+function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ...$ }: P) {
   const elementStorage = {
     left: React.useRef<HTMLDivElement>(null),
     parent: React.useRef<HTMLDivElement>(null),
@@ -102,7 +103,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...$ }: 
   }
 
   function update(storage: Storage, value: [left: number, right: number]) {
-    console.log('HorizontalNumberSlider \u2014 update');
+    console.log('HorizontalNumberSlider \u2014 update', storage, value);
 
     function fromCalculated(x: number): number {
       const _1 = x - size[0]; // 81.25 - 25 = 56.25
@@ -160,14 +161,14 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, value, ...$ }: 
     update(storage.current, value);
 
     return () => {
-      console.log('HorizontalNumberSlider \u2014 end',size);
+      console.log('HorizontalNumberSlider \u2014 end', size);
 
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
 
       window.removeEventListener('resize', onResize);
     };
-  }, [`${size}`]);
+  }, test);
 
   return (
     <div {...$} className={[className, 'HorizontalNumberSlider']} ref={elementStorage.parent}>

@@ -5,13 +5,13 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
-import { DAYS, MONTHS } from './constants';
 import React, { useRef, useState } from 'react';
-import CalendarDay from './CalendarDay';
 import EnhancedDate from '../helpers/EnhancedDate';
 import readElementWidth from '../helpers/readElementWidth';
+import CalendarDay from './CalendarDay';
+import { DAYS, MONTHS } from './constants';
 
-interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedJSXElement<'div'> {
   date: number;
   updateDate: (date: number) => void;
 }

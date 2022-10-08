@@ -6,7 +6,7 @@ import './Percentage.css';
 
 import React from 'react';
 
-interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedJSXElement<'div'> {
   percentage: number;
 }
 

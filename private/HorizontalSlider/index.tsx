@@ -15,7 +15,7 @@ import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
 import Percentage from './Percentage';
 
-interface P extends EnhancedElement<JSX.IntrinsicElements['div']> {
+interface P extends EnhancedJSXElement<'div'> {
   chevronSize?: number;
   children?: React.ReactNode;
   hasPercentage?: boolean;
