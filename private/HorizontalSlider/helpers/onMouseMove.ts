@@ -8,8 +8,6 @@ import type { State } from '../index';
 function onMouseMove(state: () => State) {
   return (event: MouseEvent | TouchEvent) => {
     if (state().isDown) {
-      event.preventDefault();
-
       state().isMoving(true);
 
       const [x] = readMouseOffset(event);
