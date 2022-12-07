@@ -2,8 +2,8 @@
  * Copyright 2022 Marek Kobida
  */
 
-import readMouseOffset from '../../helpers/readMouseOffset';
 import type { State } from '../index';
+import readMouseOffset from '../../helpers/readMouseOffset';
 
 function onMouseMove(state: () => State) {
   return (event: MouseEvent | TouchEvent) => {

@@ -5,10 +5,10 @@
 import './index.css';
 
 import React from 'react';
+import Translate from '../helpers/Translate';
 import readElementOffset from '../helpers/readElementOffset';
 import readElementWidth from '../helpers/readElementWidth';
 import readMouseOffset from '../helpers/readMouseOffset';
-import Translate from '../helpers/Translate';
 
 interface P extends EnhancedJSXElement<'div'> {
   onMove?: (calculated: [left: number, right: number]) => void;

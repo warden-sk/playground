@@ -5,15 +5,15 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
+import Percentage from './Percentage';
 import React from 'react';
-import readElementWidth from '../helpers/readElementWidth';
 import Translate from '../helpers/Translate';
 import inertia from './helpers/inertia';
 import onMouseDown from './helpers/onMouseDown';
 import onMouseLeave from './helpers/onMouseLeave';
 import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
-import Percentage from './Percentage';
+import readElementWidth from '../helpers/readElementWidth';
 
 interface P extends EnhancedJSXElement<'div'> {
   chevronSize?: number;

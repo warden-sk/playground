@@ -2,17 +2,13 @@
  * Copyright 2022 Marek Kobida
  */
 
-import './design.css';
-import './index.css';
-
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
 import HorizontalNumberSliderComponent from './HorizontalNumberSlider';
 import HorizontalSliderComponent from './HorizontalSlider';
+import React from 'react';
 
 function HorizontalNumberSlider() {
-  const [price, updatePrice] = useState<[number, number]>([43.75, 81.25]);
-  const [size, updateSize] = useState<[number, number]>([25, 100]);
+  const [price, updatePrice] = React.useState<[number, number]>([43.75, 81.25]);
+  const [size, updateSize] = React.useState<[number, number]>([25, 100]);
 
   return (
     <div mY="8">
@@ -26,7 +22,13 @@ function HorizontalNumberSlider() {
           do <span fontWeight="600">{price[1]} €</span>
         </div>
       </div>
-      <HorizontalNumberSliderComponent onMove={updatePrice} onUp={updatePrice} size={size} value={price} />
+      <HorizontalNumberSliderComponent
+        onMove={updatePrice}
+        onUp={updatePrice}
+        size={size}
+        test={[size]}
+        value={price}
+      />
     </div>
   );
 }
@@ -54,10 +56,10 @@ function HorizontalSlider({ length }: { length: number }) {
   );
 }
 
-function Client() {
+function Playground() {
   return (
     <div className="container" mX="auto" pX="4">
-      <h1 fontSize="8" mY="8">
+      <h1 fontSize="12" mY="8">
         Playground
       </h1>
       <HorizontalNumberSlider />
@@ -66,4 +68,4 @@ function Client() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('client')!).render(<Client />);
+export default Playground;

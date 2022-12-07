@@ -5,11 +5,11 @@
 import './index.css';
 
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
-import React, { useRef, useState } from 'react';
-import EnhancedDate from '../helpers/EnhancedDate';
-import readElementWidth from '../helpers/readElementWidth';
-import CalendarDay from './CalendarDay';
 import { DAYS, MONTHS } from './constants';
+import CalendarDay from './CalendarDay';
+import EnhancedDate from '../helpers/EnhancedDate';
+import React from 'react';
+import readElementWidth from '../helpers/readElementWidth';
 
 interface P extends EnhancedJSXElement<'div'> {
   date: number;
@@ -17,8 +17,8 @@ interface P extends EnhancedJSXElement<'div'> {
 }
 
 function Calendar({ date, updateDate }: P) {
-  const [downX, updateDownX] = useState<number>(0);
-  const calendar = useRef<HTMLDivElement>(null);
+  const [downX, updateDownX] = React.useState<number>(0);
+  const calendar = React.useRef<HTMLDivElement>(null);
   const enhancedDate = new EnhancedDate(date);
 
   function $(i: number): number[] {

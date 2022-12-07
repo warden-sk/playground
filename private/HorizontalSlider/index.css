@@ -30,10 +30,11 @@
 }
 .t-moving {
   position: relative;
+  user-select: none;
 }
 .t-moving::after {
   bottom: 0;
-  content: '';
+  content: "";
   left: 0;
   position: absolute;
   right: 0;
