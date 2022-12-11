@@ -79,7 +79,6 @@ function Calendar({ date, updateDate }: P) {
     <div
       className="calendar"
       display="grid"
-      fontSize="2"
       onMouseDown={e => updateDownX(e.clientX)}
       onMouseUp={e => onUp(e.clientX)}
       onTouchEnd={e => onUp(e.touches[0].clientX)}
@@ -88,7 +87,7 @@ function Calendar({ date, updateDate }: P) {
       ref={calendar}
       textAlign="center"
     >
-      <div alignItems="center" className="calendar__header" display="flex" mB="2">
+      <div alignItems="center" className="calendar__header" cursor="pointer" display="flex" mY="2">
         <ChevronLeft onClick={() => moveLeft()} />
         <div fontWeight="600" mX="auto" onClick={() => updateDate(+new Date())}>
           {MONTHS[enhancedDate.getMonth()]} {enhancedDate.getFullYear()}
@@ -96,8 +95,10 @@ function Calendar({ date, updateDate }: P) {
         <ChevronRight onClick={() => moveRight()} />
       </div>
       {DAYS.map(day => (
-        <div fontWeight="600" key={day} p="2">
-          {day}
+        <div className="calendar__day">
+          <div alignItems="center" className="calendar__day__i" display="flex" fontWeight="600" justifyContent="center">
+            {day}
+          </div>
         </div>
       ))}
       {BEFORE.map(i => (

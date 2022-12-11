@@ -2,6 +2,9 @@
  * Copyright 2022 Marek Kobida
  */
 
+import './index.css';
+
+import { Calendar } from '../index';
 import HorizontalNumberSliderComponent from './HorizontalNumberSlider';
 import HorizontalSliderComponent from './HorizontalSlider';
 import React from 'react';
@@ -12,7 +15,9 @@ function HorizontalNumberSlider() {
 
   return (
     <div mY="8">
-      <h2 fontSize="8">HorizontalNumberSlider</h2>
+      <h2 fontSize="8" mB="4">
+        HorizontalNumberSlider
+      </h2>
       <div onClick={() => updateSize([0, 50])}>zmeniť veľkosť</div>
       <div display="flex" justifyContent="space-between">
         <div>
@@ -36,7 +41,9 @@ function HorizontalNumberSlider() {
 function HorizontalSlider({ length }: { length: number }) {
   return (
     <div mY="8">
-      <h2 fontSize="8">HorizontalSlider</h2>
+      <h2 fontSize="8" mB="4">
+        HorizontalSlider
+      </h2>
       <HorizontalSliderComponent alignItems="center" chevronSize={48} display="flex" hasPercentage mX="!2">
         {[...new Array(length)].map(($, i) => (
           <a flex="none" href={`#${i}`} pX="2" width={['6/12', { '#': '4/12' }]}>
@@ -57,13 +64,22 @@ function HorizontalSlider({ length }: { length: number }) {
 }
 
 function Playground() {
+  const [date, updateDate] = React.useState<number>(+new Date());
+
   return (
-    <div className="container" mX="auto" pX="4">
-      <h1 fontSize="12" mY="8">
-        Playground
-      </h1>
-      <HorizontalNumberSlider />
-      <HorizontalSlider length={6} />
+    <div id="playground">
+      <div className="container" mX="auto" pX="4">
+        <div mY="8">
+          <h2 fontSize="8" mB="4">
+            Calendar
+          </h2>
+          <div width="6/12">
+            <Calendar date={date} updateDate={updateDate} />
+          </div>
+        </div>
+        <HorizontalNumberSlider />
+        <HorizontalSlider length={6} />
+      </div>
     </div>
   );
 }

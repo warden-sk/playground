@@ -5,13 +5,11 @@
 .calendar {
   -webkit-user-select: none;
   background-color: var(--calendar\(background-color\));
+  border-radius: var(--border-radius);
   color: var(--calendar\(color\));
   grid-template-columns: repeat(7, minmax(0, 1fr));
   user-select: none;
 }
 .calendar__header {
   grid-column: 1/8;
-}
-.calendar .icon {
-  cursor: pointer;
 }

@@ -1,14 +1,11 @@
 :root {
   --calendar__day_is-current\(background-color\): #fff;
   --calendar__day_is-current\(color\): #000;
-
-  --calendar__day_is-different-month\(color\): hsl(0, 0%, 50%);
 }
 .calendar > :not(.calendar__day) {
   color: var(--calendar__day_is-current\(background-color\));
 }
 .calendar__day {
-  cursor: pointer;
   padding-bottom: 100%;
   position: relative;
 }
@@ -18,7 +15,7 @@
   color: var(--calendar__day_is-current\(color\));
 }
 .calendar__day_is-different-month {
-  color: var(--calendar__day_is-different-month\(color\));
+  opacity: 0.5;
 }
 .calendar__day__i {
   height: 100%;

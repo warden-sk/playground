@@ -14,6 +14,8 @@ interface P extends EnhancedJSXElement<'div'> {
 }
 
 function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attributes }: P) {
+  const isCurrent = i === date.getDate() && !isDifferentMonth;
+
   return (
     <div
       {...attributes}
@@ -21,7 +23,7 @@ function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attr
         className,
         'calendar__day',
         {
-          'calendar__day_is-current': i === date.getDate() && !isDifferentMonth,
+          'calendar__day_is-current': isCurrent,
           'calendar__day_is-different-month': isDifferentMonth,
         },
       ]}
@@ -29,7 +31,9 @@ function CalendarDay({ className, date, i, isDifferentMonth, updateDate, ...attr
       <div
         alignItems="center"
         className="calendar__day__i"
+        cursor="pointer"
         display="flex"
+        fontWeight={isCurrent && '600'}
         justifyContent="center"
         onClick={() => updateDate(date.setDate(i))}
       >
