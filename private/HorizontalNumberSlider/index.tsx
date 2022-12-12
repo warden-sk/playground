@@ -103,7 +103,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
   }
 
   function update(storage: Storage, value: [left: number, right: number]) {
-    console.log('HorizontalNumberSlider \u2014 update', storage, value);
+    // console.log('HorizontalNumberSlider \u2014 update', storage, value);
 
     function fromCalculated(x: number): number {
       const _1 = x - size[0]; // 81.25 - 25 = 56.25
@@ -120,7 +120,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
   }
 
   React.useLayoutEffect(() => {
-    console.log('HorizontalNumberSlider \u2014 start', size);
+    // console.log('HorizontalNumberSlider \u2014 start', size);
 
     function onMouseMove(event: MouseEvent | TouchEvent) {
       const which = whichIsDown();
@@ -161,7 +161,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
     update(storage.current, value);
 
     return () => {
-      console.log('HorizontalNumberSlider \u2014 end', size);
+      // console.log('HorizontalNumberSlider \u2014 end', size);
 
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
