@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Marek Kobida
+ * Copyright 2023 Marek Kobida
  */
 
 export const DAYS = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'] as const;
