@@ -2,12 +2,11 @@
  * Copyright 2023 Marek Kobida
  */
 
-import './index.css';
+import React from 'react';
 
-import { Calendar } from '../index';
 import HorizontalNumberSliderComponent from './HorizontalNumberSlider';
 import HorizontalSliderComponent from './HorizontalSlider';
-import React from 'react';
+import './index.css';
 
 function HorizontalNumberSlider() {
   const [price, updatePrice] = React.useState<[number, number]>([43.75, 81.25]);
@@ -64,19 +63,9 @@ function HorizontalSlider({ length }: { length: number }) {
 }
 
 function Playground() {
-  const [date, updateDate] = React.useState<number>(+new Date());
-
   return (
     <div id="playground">
       <div className="container" mX="auto" pX="4">
-        <div mY="8">
-          <h2 fontSize="8" mB="4">
-            Calendar
-          </h2>
-          <div width="6/12">
-            <Calendar date={date} updateDate={updateDate} />
-          </div>
-        </div>
         <HorizontalNumberSlider />
         <HorizontalSlider length={6} />
       </div>
