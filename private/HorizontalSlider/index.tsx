@@ -99,7 +99,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
 
     (['mouseup', 'touchend'] as const).forEach(type => parentElement.current!.addEventListener(type, onMouseUp2));
 
-    new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver(() => {
       const { x: translateX } = state.current.translate().read();
 
       const percentage = ((translateX * -1) / state.current.width) * 100;
@@ -107,10 +107,14 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
       updateWidth();
 
       setTranslateX((state.current.width / 100) * percentage * -1);
-    }).observe(parentElement.current!);
+    });
+
+    resizeObserver.observe(parentElement.current!);
 
     return () => {
       if (parentElement.current) {
+        resizeObserver.unobserve(parentElement.current);
+
         (['mousedown', 'touchstart'] as const).forEach(type =>
           parentElement.current!.removeEventListener(type, onMouseDown2)
         );
