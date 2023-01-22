@@ -61,16 +61,3 @@ function HorizontalSlider({ length }: { length: number }) {
     </div>
   );
 }
-
-function Playground() {
-  return (
-    <div id="playground">
-      <div className="container" mX="auto" pX="4">
-        <HorizontalNumberSlider />
-        <HorizontalSlider length={6} />
-      </div>
-    </div>
-  );
-}
-
-export default Playground;
