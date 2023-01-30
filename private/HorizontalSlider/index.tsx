@@ -152,7 +152,7 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
             size={chevronSize}
           />
         )}
-        <div ref={parentElement} style={{ overflowX: 'hidden' }}>
+        <div ref={parentElement} style={{ overflowX: 'hidden', overflowY: 'hidden' }}>
           <div {...$} ref={childElement}>
             {children}
           </div>
