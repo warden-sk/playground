@@ -14,7 +14,6 @@ interface P extends EnhancedJSXElement<'div'> {
   onMove?: (calculated: [left: number, right: number]) => void;
   onUp?: (calculated: [left: number, right: number]) => void;
   size: [from: number, to: number];
-  test: any[];
   value: [left: number, right: number];
 }
 
@@ -29,7 +28,7 @@ interface StorageElement {
   startX: number;
 }
 
-function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ...$ }: P) {
+function HorizontalNumberSlider({ onMove, onUp, size, value, ...$ }: P) {
   const elementStorage = {
     left: React.useRef<HTMLDivElement>(null),
     parent: React.useRef<HTMLDivElement>(null),
@@ -102,7 +101,7 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
     };
   }
 
-  function update(storage: Storage, value: [left: number, right: number]) {
+  function update(value: [left: number, right: number]) {
     // console.log('HorizontalNumberSlider \u2014 update', storage, value);
 
     function fromCalculated(x: number): number {
@@ -115,8 +114,8 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
       return _3 * availableWidth();
     }
 
-    moveTo('left', fromCalculated(storage.left.calculated || value[0]), true);
-    moveTo('right', fromCalculated(storage.right.calculated || value[1]), true);
+    moveTo('left', fromCalculated(value[0]), true);
+    moveTo('right', fromCalculated(value[1]), true);
   }
 
   React.useLayoutEffect(() => {
@@ -150,28 +149,32 @@ function HorizontalNumberSlider({ className, onMove, onUp, size, test, value, ..
     (['mousemove', 'touchmove'] as const).forEach(type => window.addEventListener(type, onMouseMove));
     (['mouseup', 'touchend'] as const).forEach(type => window.addEventListener(type, onMouseUp));
 
-    function onResize() {
-      update(storage.current, value);
-    }
-
-    window.addEventListener('resize', onResize);
-
     //------------------------------------------------------------------------------------------------------------------
-
-    update(storage.current, value);
 
     return () => {
       // console.log('HorizontalNumberSlider \u2014 end', size);
 
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
+    };
+  }, [JSON.stringify(size)]);
 
+  React.useLayoutEffect(() => {
+    function onResize() {
+      update(value);
+    }
+
+    window.addEventListener('resize', onResize);
+
+    update(value);
+
+    return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, test);
+  }, [JSON.stringify([size, value])]);
 
   return (
-    <div {...$} className={[className, 'HorizontalNumberSlider']} ref={elementStorage.parent}>
+    <div {...$} className="HorizontalNumberSlider" ref={elementStorage.parent}>
       {(['left', 'right'] as const).map(id => (
         <div
           className="HorizontalNumberSlider__slider"
