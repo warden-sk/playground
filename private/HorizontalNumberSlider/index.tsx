@@ -157,7 +157,7 @@ function HorizontalNumberSlider({ onMove, onUp, size, value, ...$ }: P) {
       (['mousemove', 'touchmove'] as const).forEach(type => window.removeEventListener(type, onMouseMove));
       (['mouseup', 'touchend'] as const).forEach(type => window.removeEventListener(type, onMouseUp));
     };
-  }, [JSON.stringify(size)]);
+  }, [JSON.stringify(size), onUp]);
 
   React.useLayoutEffect(() => {
     function onResize() {
