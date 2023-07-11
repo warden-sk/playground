@@ -6,7 +6,7 @@ import type { State } from '../index';
 import inertia from './inertia';
 
 function onMouseUp(state: () => State, updateState: (on: (state: State) => State) => void) {
-  return () => {
+  return event => {
     updateState(state => ({ ...state, isDown: false }));
 
     state().isMoving(false);

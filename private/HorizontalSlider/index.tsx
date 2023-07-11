@@ -2,18 +2,17 @@
  * Copyright 2023 Marek Kobida
  */
 
-import './index.css';
-
 import { ChevronLeft, ChevronRight } from '@warden-sk/icons';
-import Percentage from './Percentage';
 import React from 'react';
+import readElementWidth from '../helpers/readElementWidth';
 import Translate from '../helpers/Translate';
 import inertia from './helpers/inertia';
 import onMouseDown from './helpers/onMouseDown';
 import onMouseLeave from './helpers/onMouseLeave';
 import onMouseMove from './helpers/onMouseMove';
 import onMouseUp from './helpers/onMouseUp';
-import readElementWidth from '../helpers/readElementWidth';
+import './index.css';
+import Percentage from './Percentage';
 
 interface P extends EnhancedJSXElement<'div'> {
   chevronSize?: number;
@@ -91,7 +90,29 @@ function HorizontalSlider({ chevronSize, children, hasPercentage, ...$ }: P) {
     const onMouseMove2 = onMouseMove(() => state.current);
     const onMouseUp2 = onMouseUp(() => state.current, updateState);
 
-    (['mousedown', 'touchstart'] as const).forEach(type => parentElement.current!.addEventListener(type, onMouseDown2));
+    const adjustedOnMouseDown2 = e => {
+      const trgt = e.target;
+      if (trgt.tagName === 'H1' && trgt.classList.contains('line-before')) {
+        console.log('didnothing');
+        return; // Do nothing if the event originated from an anchor element
+      }
+      if (trgt.tagName === 'H3') {
+        return;
+      }
+      if (trgt.tagName === 'IMG') {
+        console.log('didnothing');
+        return;
+      }
+      if (/Cestovať s Koalou\nmá šmrnc/.test(trgt.innerHTML)) {
+        console.log('didnothing');
+        return;
+      }
+      onMouseDown2(e);
+    };
+
+    (['mousedown', 'touchstart'] as const).forEach(type =>
+      parentElement.current!.addEventListener(type, adjustedOnMouseDown2)
+    );
 
     parentElement.current!.addEventListener('mouseleave', onMouseLeave2);
 
